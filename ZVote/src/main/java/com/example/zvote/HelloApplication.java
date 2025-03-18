@@ -6,18 +6,28 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
-public class HelloApplication extends Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello World!");
-        stage.setScene(scene);
-        stage.show();
+public class HelloApplication  {
+    public static void main(String[] args)
+            throws SQLException, ClassNotFoundException {
+        // Load the JDBC driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        System.out.println("Driver loaded");
+
+        // Connect to a database
+        Connection connection = DriverManager.getConnection
+                ("jdbc:mysql://192.168.1.4:3307/zvote" , "marco", "Marco.Bitar21");
+        System.out.println("Database connected");
+
+        // Create a statement
+        Statement statement = connection.createStatement();
+
+        // Close the connection
+        connection.close();
     }
 
-    public static void main(String[] args) {
-        launch();
-    }
 }
