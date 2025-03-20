@@ -9,28 +9,35 @@ public class DBHandler {
 
     private Connection connection;
 
-    static {
+    // Constructor to establish a persistent connection
+    public DBHandler() {
+        connect();
+    }
+
+    private void connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL driver once
             System.out.println("Driver loaded successfully.");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("MySQL Driver not found", e);
-        }
-    }
 
-    // Constructor to establish a persistent connection
-    public DBHandler() {
-        try {
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Database connected successfully.");
-        } catch (SQLException e) {
+
+        } catch (ClassNotFoundException e) {
+            System.out.println("Error: MySQL JDBC Driver not found.");
             e.printStackTrace();
-            System.out.println("Database connection failed.");
+
+        } catch (SQLException e) {
+            System.out.println("Error: Failed to establish connection to the database.");
+            e.printStackTrace();
         }
     }
 
     // Getter for connection
     public Connection getConnection() {
+        if (connection == null) {
+            System.out.println("Connection is null. Attempting to reconnect.");
+            connect();
+        }
         return connection;
     }
 
@@ -38,8 +45,13 @@ public class DBHandler {
     public ResultSet executeQuery(String query) {
         try {
             PreparedStatement stmt = connection.prepareStatement(query);
-            return stmt.executeQuery(); // ResultSet stays open because connection is open
+            if (stmt != null) {
+                return stmt.executeQuery(query);
+            } else {
+                System.out.println("Statement is null. Cannot execute query.");
+            }
         } catch (SQLException e) {
+            System.out.println("Error executing query: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -48,8 +60,13 @@ public class DBHandler {
     // Method to execute INSERT, UPDATE, DELETE queries
     public int executeUpdate(String query) {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            return stmt.executeUpdate();
+            if (stmt != null) {
+                return stmt.executeUpdate(query);
+            } else {
+                System.out.println("Statement is null. Cannot execute update.");
+            }
         } catch (SQLException e) {
+            System.out.println("Error executing update: " + e.getMessage());
             e.printStackTrace();
         }
         return 0;
@@ -58,11 +75,12 @@ public class DBHandler {
     // Close the connection when the app exits
     public void closeConnection() {
         try {
-            if (connection != null) {
+            if (connection != null && !connection.isClosed()) {
                 connection.close();
                 System.out.println("Database connection closed.");
             }
         } catch (SQLException e) {
+            System.out.println("Error closing database connection: " + e.getMessage());
             e.printStackTrace();
         }
     }
