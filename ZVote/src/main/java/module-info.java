@@ -16,6 +16,4 @@ module com.example.zvote {
     exports com.example.zvote;
     exports com.example.zvote.Connection;
     opens com.example.zvote.Connection to javafx.fxml;
-    exports com.example.zvote.HomePages;
-    opens com.example.zvote.HomePages to javafx.fxml;
 }

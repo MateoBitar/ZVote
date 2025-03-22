@@ -1,4 +1,4 @@
-package com.example.zvote.HomePages;
+package com.example.zvote;
 
 import com.example.zvote.Connection.DBHandler;
 
