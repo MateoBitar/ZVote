@@ -18,22 +18,42 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Top Bar
         HBox topBar = new HBox(20);
-        topBar.setPadding(new Insets(10));
+        topBar.setPadding(new Insets(10,10,10,20));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
 
         Label logo = new Label("ZVote");
         logo.setFont(Font.font("Onyx", FontWeight.BOLD, 30));
 
-        HBox menu = new HBox(20);
+        HBox menu = new HBox(-10);
 
-        Label about = new Label("About");
-        about.setFont(Font.font("Onyx", FontWeight.BOLD, 20));
+        // About is now a Button
+        Button about = new Button("About");
+        about.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20");
+        about.setPrefHeight(30);
+        about.setPrefWidth(55);
+        // Add hover effects for buttons
+        about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
-        Label contact = new Label("Contact");
-        contact.setFont(Font.font("Onyx", FontWeight.BOLD, 20));
+        // Contact is now a Button
+        Button contact = new Button("Contact");
+        contact.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20");
+        contact.setPrefHeight(30);
+        contact.setPrefWidth(65);
+        contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
-        Label profileIcon = new Label("\uD83D\uDC64"); // Unicode for user icon
-        profileIcon.setFont(Font.font("Onyx", FontWeight.BOLD, 20));
+
+        // Profile is now a Button
+        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
+        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20");
+        profileIcon.setPrefHeight(30);
+        profileIcon.setPrefWidth(50);
+        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         menu.getChildren().addAll(about, contact, profileIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
@@ -70,6 +90,8 @@ public class Main extends Application {
                 " -fx-font-weight: bold; -fx-background-radius: 20");
         voteNow.setPrefHeight(30);
         voteNow.setPrefWidth(100);
+        voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        voteNow.setOnMouseExited(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         textSection.getChildren().addAll(title, subtitle, tagline, voteNow);
         textSection.setAlignment(Pos.CENTER);
