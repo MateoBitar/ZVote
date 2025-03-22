@@ -1,4 +1,6 @@
-package com.example.zvote;
+package com.example.zvote.HomePages;
+
+import com.example.zvote.Connection.DBHandler;
 
 import java.sql.Connection;
 

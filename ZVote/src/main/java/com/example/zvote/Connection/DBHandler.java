@@ -1,4 +1,4 @@
-package com.example.zvote;
+package com.example.zvote.Connection;
 
 import java.sql.*;
 
