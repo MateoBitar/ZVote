@@ -45,7 +45,7 @@ public class Main extends Application {
         StackPane content = new StackPane();
         content.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        ImageView votingImage = new ImageView(new Image("C:\\Users\\Marco\\OneDrive\\Pictures\\Screenshots\\Landing Page.jpg"));
+        ImageView votingImage = new ImageView(new Image(getClass().getResource("/images/Landing Page.jpg").toExternalForm()));
         votingImage.setPreserveRatio(false);
 
         // Make the image resize with the window
