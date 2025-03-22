@@ -7,11 +7,6 @@ public class Main {
         DBHandler dbHandler = new DBHandler();
         Connection connection = dbHandler.getConnection(); // Get connection
 
-        if (connection != null) {
-            System.out.println("Connected successfully!");
-        } else {
-            System.out.println("Connection failed.");
-        }
 
         dbHandler.closeConnection(); // Always close the connection when done
     }
