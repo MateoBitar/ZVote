@@ -1,5 +1,7 @@
 package com.example.zvote;
 
+import com.example.zvote.Controllers.AboutUsController;
+import com.example.zvote.Controllers.ContactUsController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -35,6 +37,7 @@ public class Main extends Application {
         // Add hover effects for buttons
         about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
         about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+
 
         // Contact is now a Button
         Button contact = new Button("Contact");
@@ -110,6 +113,15 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.setTitle("ZVote - Online Voting System");
         primaryStage.show();
+
+        about.setOnAction(e -> {
+            AboutUsController aboutUsController = new AboutUsController(primaryStage, scene);
+            aboutUsController.showAboutUsScene();
+        });
+        contact.setOnAction(e -> {
+            ContactUsController contactUsController = new ContactUsController(primaryStage, scene);
+            contactUsController.showContactUsScene();
+        });
     }
 
     public static void main(String[] args) {
