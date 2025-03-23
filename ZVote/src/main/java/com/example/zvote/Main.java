@@ -2,6 +2,7 @@ package com.example.zvote;
 
 import com.example.zvote.Controllers.AboutUsController;
 import com.example.zvote.Controllers.ContactUsController;
+import com.example.zvote.Controllers.SignInController;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -121,6 +122,14 @@ public class Main extends Application {
         contact.setOnAction(e -> {
             ContactUsController contactUsController = new ContactUsController(primaryStage, scene);
             contactUsController.showContactUsScene();
+        });
+
+        profileIcon.setOnAction(e-> {
+            SignInController.showSignInWindow();
+        });
+
+        voteNow.setOnAction(e -> {
+            SignInController.showSignInWindow();
         });
     }
 
