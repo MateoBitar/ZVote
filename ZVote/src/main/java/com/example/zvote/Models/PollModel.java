@@ -86,8 +86,8 @@ public class PollModel {
     @Override
     public String toString() {
         return "poll_ID = " + poll_ID +
-                ", title = '" + title + '\'' +
-                ", description = '" + description + '\'' +
+                ", title = '" + title +
+                ", description = '" + description +
                 ", start_date = " + start_date +
                 ", end_date = " + end_date +
                 ", status = " + status +
