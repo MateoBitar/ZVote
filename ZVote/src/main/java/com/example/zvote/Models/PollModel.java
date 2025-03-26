@@ -19,11 +19,12 @@ public class PollModel {
     private int nbOfAbstentions;
     private int admin_ID;
 
-    public PollModel(String title, String description, Date start_date, Date end_date) {
-        this.title = title;
-        this.description = description;
-        this.start_date = start_date;
-        this.end_date = end_date;
+    public PollModel(String title, String description, Date start_date, Date end_date, int admin_ID) {
+        setTitle(title);
+        setDescription(description);
+        setStart_date(start_date);
+        setEnd_date(end_date);
+        setAdmin_ID(admin_ID);
     }
 
     public int getPoll_ID() {
@@ -78,9 +79,13 @@ public class PollModel {
         return admin_ID;
     }
 
+    public void setAdmin_ID(int admin_ID) {
+        this.admin_ID = admin_ID;
+    }
+
     @Override
     public String toString() {
-        return "poll_ID=" + poll_ID +
+        return "poll_ID = " + poll_ID +
                 ", title = '" + title + '\'' +
                 ", description = '" + description + '\'' +
                 ", start_date = " + start_date +
