@@ -100,11 +100,11 @@ public class UserModel {
     @Override
     public String toString() {
         return "user_ID = " + user_ID +
-                ", username = '" + username +
-                ", user_email = '" + user_email +
-                ", user_pass = '" + user_pass +
+                ", username = " + username +
+                ", user_email = " + user_email +
+                ", user_pass = " + user_pass +
                 ", user_photoID = " + Arrays.toString(user_photoID) +
-                ", phoneNb = '" + phoneNb +
-                ", role = '" + role;
+                ", phoneNb = " + phoneNb +
+                ", role = " + role;
     }
 }
