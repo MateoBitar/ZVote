@@ -166,6 +166,8 @@ public class SignInController {
                 // Save user session details
                 userSession.put("username", usernameField.getText());
                 userSession.put("email", emailField.getText());
+                userSession.put("password", passwordField.getText());
+                userSession.put("phoneNb", countryCodeDropdown.getValue() + " " + phoneField.getText());
 
                 // Clear input fields
                 usernameField.clear();
