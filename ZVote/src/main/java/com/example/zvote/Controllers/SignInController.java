@@ -19,7 +19,7 @@ public class SignInController {
 
     public static void showSignInWindow(Stage primaryStage) {
         Stage signInStage = new Stage();
-        signInStage.initModality(Modality.NONE);
+        signInStage.initModality(Modality.APPLICATION_MODAL);
         signInStage.setTitle("Sign In - ZVote");
         signInStage.setResizable(false);
         signInStage.initStyle(StageStyle.UNDECORATED);
@@ -199,12 +199,6 @@ public class SignInController {
         );
 
         Scene scene = new Scene(layout, 350, 500);
-
-        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            if (!layout.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
-                signInStage.close(); // Close the stage if clicked outside
-            }
-        });
 
         signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2);
         signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50);

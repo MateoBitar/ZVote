@@ -20,7 +20,7 @@ public class UserModel {
         setUser_pass(user_pass);
         setUser_photoID(user_photoID);
         setPhoneNb(phoneNb);
-        role = "USER";
+        role = "voter";
     }
 
     public int getUser_ID() {
