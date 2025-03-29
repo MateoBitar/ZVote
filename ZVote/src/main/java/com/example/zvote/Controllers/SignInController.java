@@ -138,6 +138,9 @@ public class SignInController {
             File file = fileChooser.showOpenDialog(signInStage);
             if (file != null) {
                 selectedPhoto[0] = file; // Save the selected file
+                uploadPhotoButton.setText("Photo Uploaded");
+            } else {
+                uploadPhotoButton.setText("Upload Photo ID");
             }
         });
 
