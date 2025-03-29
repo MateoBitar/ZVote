@@ -76,7 +76,7 @@ public class AboutUsController {
         root.setCenter(centerWrapper);
 
         // Set Scene with Resizable Background
-        Scene aboutScene = new Scene(root, 800, 550);
+        Scene aboutScene = new Scene(root, 1700, 980);
         primaryStage.setScene(aboutScene);
     }
 

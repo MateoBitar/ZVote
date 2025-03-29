@@ -102,6 +102,11 @@ public class SignInController {
 
         TextField phoneField = new TextField();
         phoneField.setPromptText("Phone Number");
+        phoneField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*") || newValue.length() > 10) {   // Check for numeric input and max length
+                phoneField.setText(oldValue); // Revert to the old value
+            }
+        });
         phoneField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
@@ -127,6 +132,8 @@ public class SignInController {
         // Centering the button
         HBox buttonContainer = new HBox(submitButton);
         buttonContainer.setAlignment(Pos.CENTER);
+
+
 
         // Add all components to the layout
         layout.getChildren().addAll(

@@ -69,7 +69,7 @@ public class ContactUsController {
         root.setCenter(centerWrapper);
 
         // Set Scene with Resizable Background
-        Scene contactScene = new Scene(root, 800, 550);
+        Scene contactScene = new Scene(root, 1700, 980);
         primaryStage.setScene(contactScene);
     }
 
