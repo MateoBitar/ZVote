@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -111,7 +112,7 @@ public class Main extends Application {
         VBox mainLayout = new VBox(10);
         mainLayout.getChildren().addAll(topBar, content);
 
-        Scene scene = new Scene(mainLayout, 1700, 980);
+        Scene scene = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(scene);
         primaryStage.setTitle("ZVote - Online Voting System");
         primaryStage.show();

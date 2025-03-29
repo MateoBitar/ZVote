@@ -136,7 +136,7 @@ public class SignInController {
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
                         "-fx-background-radius: 30px; " +
-                        "-fx-padding: 10px 30px;"
+                        "-fx-padding: 5px 10px;"
         );
         submitButton.setOnAction(event -> {
             // Validate inputs
@@ -188,8 +188,6 @@ public class SignInController {
         HBox buttonContainer = new HBox(10, uploadPhotoButton, submitButton);
         buttonContainer.setAlignment(Pos.CENTER);
 
-
-
         // Add all components to the layout
         layout.getChildren().addAll(
                 title,
@@ -208,8 +206,8 @@ public class SignInController {
             }
         });
 
-        signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2); // Center horizontally
-        signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50); // Center vertically and offset by 50px
+        signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2);
+        signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50);
 
         signInStage.setScene(scene);
         signInStage.showAndWait();

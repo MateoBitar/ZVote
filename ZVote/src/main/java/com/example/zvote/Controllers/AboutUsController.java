@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class AboutUsController {
@@ -76,7 +77,7 @@ public class AboutUsController {
         root.setCenter(centerWrapper);
 
         // Set Scene with Resizable Background
-        Scene aboutScene = new Scene(root, 1700, 980);
+        Scene aboutScene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(aboutScene);
     }
 
