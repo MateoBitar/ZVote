@@ -6,19 +6,26 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import javafx.scene.input.MouseEvent;
 
 public class SignInController {
     public static void showSignInWindow() {
         Stage signInStage = new Stage();
-        signInStage.initModality(Modality.APPLICATION_MODAL);
+        signInStage.initModality(Modality.NONE);
         signInStage.setTitle("Sign In - ZVote");
         signInStage.setResizable(false);
+        signInStage.initStyle(StageStyle.UNDECORATED);
+
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));
         layout.setAlignment(Pos.CENTER_LEFT);
-        layout.setStyle("-fx-background-color: #C8F0FF;");
+        layout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
+                " -fx-border-radius: 10px");
 
         Label title = new Label("Sign In");
         title.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
@@ -31,8 +38,9 @@ public class SignInController {
         usernameField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
-                        "-fx-border-color: lightgray; " +
-                        "-fx-padding: 8px;"
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
         );
         usernameField.setPrefWidth(250);
 
@@ -44,8 +52,9 @@ public class SignInController {
         emailField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
-                        "-fx-border-color: lightgray; " +
-                        "-fx-padding: 8px;"
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
         );
         emailField.setPrefWidth(250);
 
@@ -57,8 +66,9 @@ public class SignInController {
         passwordField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
-                        "-fx-border-color: lightgray; " +
-                        "-fx-padding: 8px;"
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
         );
         passwordField.setPrefWidth(250);
 
@@ -75,7 +85,8 @@ public class SignInController {
         );
         countryCodeDropdown.setValue("+961");
         countryCodeDropdown.setPrefWidth(120);
-        countryCodeDropdown.setStyle("-fx-background-color: white; -fx-border-radius: 50;");
+        countryCodeDropdown.setStyle("-fx-background-color: white; -fx-border-radius: 50; -fx-border-color: #C8F0FF;" +
+                "-fx-border-width: 3px");
 
         // To ensure the selected item in the combo box is just the code
         countryCodeDropdown.setButtonCell(new ListCell<String>() {
@@ -89,14 +100,14 @@ public class SignInController {
             }
         });
 
-
         TextField phoneField = new TextField();
         phoneField.setPromptText("Phone Number");
         phoneField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
-                        "-fx-border-color: lightgray; " +
-                        "-fx-padding: 8px;"
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
         );
         phoneField.setPrefWidth(250);
 
@@ -105,7 +116,7 @@ public class SignInController {
         // Submit Button
         Button submitButton = new Button("Submit");
         submitButton.setStyle(
-                "-fx-background-color: #87CEEB; " +
+                "-fx-background-color: #C8F0FF; " +
                         "-fx-text-fill: black; " +
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
@@ -128,6 +139,20 @@ public class SignInController {
         );
 
         Scene scene = new Scene(layout, 350, 500);
+
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            double x = event.getSceneX();
+            double y = event.getSceneY();
+
+            // Check if click is outside the form's boundaries
+            if (x < 0 || x > scene.getWidth() || y < 0 || y > scene.getHeight()) {
+                signInStage.close(); // Close the stage if clicked outside
+            }
+        });
+
+        signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2); // Center horizontally
+        signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50); // Center vertically and offset by 50px
+
         signInStage.setScene(scene);
         signInStage.showAndWait();
     }

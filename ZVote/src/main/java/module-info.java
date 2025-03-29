@@ -11,6 +11,7 @@ module com.example.zvote {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires java.desktop;
 
     opens com.example.zvote to javafx.fxml;
     exports com.example.zvote;
