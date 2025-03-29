@@ -1,25 +1,28 @@
 package com.example.zvote.Controllers;
 
+import com.example.zvote.Services.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.stage.Modality;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.stage.*;
+
+import java.io.File;
+import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInController {
-    public static void showSignInWindow() {
+    private static Map<String, Object> userSession = new HashMap<>(); // Holds session details
+
+    public static void showSignInWindow(Stage primaryStage) {
         Stage signInStage = new Stage();
         signInStage.initModality(Modality.NONE);
         signInStage.setTitle("Sign In - ZVote");
         signInStage.setResizable(false);
         signInStage.initStyle(StageStyle.UNDECORATED);
-
 
         VBox layout = new VBox(15);
         layout.setPadding(new Insets(20));
@@ -88,18 +91,6 @@ public class SignInController {
         countryCodeDropdown.setStyle("-fx-background-color: white; -fx-border-radius: 50; -fx-border-color: #C8F0FF;" +
                 "-fx-border-width: 3px");
 
-        // To ensure the selected item in the combo box is just the code
-        countryCodeDropdown.setButtonCell(new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item != null && !empty) {
-                    // Show only the country code in the combo box button
-                    setText(item.split(" ")[0]);
-                }
-            }
-        });
-
         TextField phoneField = new TextField();
         phoneField.setPromptText("Phone Number");
         phoneField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -118,6 +109,25 @@ public class SignInController {
 
         phoneBox.getChildren().addAll(countryCodeDropdown, phoneField);
 
+        // FileChooser for Photo ID
+        FileChooser fileChooser = new FileChooser();
+        Button uploadPhotoButton = new Button("Upload Photo ID");
+        uploadPhotoButton.setStyle(
+                "-fx-background-color: #C8F0FF; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-radius: 30px; " +
+                        "-fx-background-radius: 30px; " +
+                        "-fx-padding: 5px 10px;"
+        );
+        final File[] selectedPhoto = {null}; // To store the chosen photo
+        uploadPhotoButton.setOnAction(event -> {
+            File file = fileChooser.showOpenDialog(signInStage);
+            if (file != null) {
+                selectedPhoto[0] = file; // Save the selected file
+            }
+        });
+
         // Submit Button
         Button submitButton = new Button("Submit");
         submitButton.setStyle(
@@ -128,9 +138,52 @@ public class SignInController {
                         "-fx-background-radius: 30px; " +
                         "-fx-padding: 10px 30px;"
         );
+        submitButton.setOnAction(event -> {
+            // Validate inputs
+            if (usernameField.getText().isEmpty() || emailField.getText().isEmpty() ||
+                    passwordField.getText().isEmpty() || phoneField.getText().isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
+                return;
+            }
 
-        // Centering the button
-        HBox buttonContainer = new HBox(submitButton);
+            byte[] photoID;
+            try {
+                if (selectedPhoto[0] != null) {
+                    photoID = Files.readAllBytes(selectedPhoto[0].toPath());
+                } else {
+                    photoID = new byte[0]; // Default empty photo ID
+                }
+
+                // Call UserService to add user
+                UserService.addUser(
+                        usernameField.getText(),
+                        emailField.getText(),
+                        passwordField.getText(),
+                        photoID,
+                        countryCodeDropdown.getValue() + " " + phoneField.getText()
+                );
+
+                // Save user session details
+                userSession.put("username", usernameField.getText());
+                userSession.put("email", emailField.getText());
+
+                // Clear input fields
+                usernameField.clear();
+                emailField.clear();
+                passwordField.clear();
+                phoneField.clear();
+                countryCodeDropdown.setValue("+961");
+
+                LandingPageController main = new LandingPageController(primaryStage, userSession);
+                main.showMain();
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while uploading the photo.");
+                e.printStackTrace();
+            }
+        });
+
+        // Centering the buttons
+        HBox buttonContainer = new HBox(10, uploadPhotoButton, submitButton);
         buttonContainer.setAlignment(Pos.CENTER);
 
 
@@ -148,11 +201,7 @@ public class SignInController {
         Scene scene = new Scene(layout, 350, 500);
 
         scene.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
-
-            // Check if click is outside the form's boundaries
-            if (x < 0 || x > scene.getWidth() || y < 0 || y > scene.getHeight()) {
+            if (!layout.getBoundsInParent().contains(event.getSceneX(), event.getSceneY())) {
                 signInStage.close(); // Close the stage if clicked outside
             }
         });
@@ -162,5 +211,12 @@ public class SignInController {
 
         signInStage.setScene(scene);
         signInStage.showAndWait();
+    }
+
+    public static void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

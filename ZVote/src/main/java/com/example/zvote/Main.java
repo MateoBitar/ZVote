@@ -126,11 +126,11 @@ public class Main extends Application {
         });
 
         profileIcon.setOnAction(e-> {
-            SignInController.showSignInWindow();
+            SignInController.showSignInWindow(primaryStage);
         });
 
         voteNow.setOnAction(e -> {
-            SignInController.showSignInWindow();
+            SignInController.showSignInWindow(primaryStage);
         });
     }
 
