@@ -5,7 +5,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
@@ -109,6 +108,20 @@ public class SignInController {
 
         phoneBox.getChildren().addAll(countryCodeDropdown, phoneField);
 
+        Button backButton = new Button("\u2190"); // Unicode for a left-pointing arrow
+        backButton.setStyle(
+                "-fx-background-color: #C8F0FF; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-radius: 30px; " +
+                        "-fx-background-radius: 30px; " +
+                        "-fx-padding: 0px 10px;" +
+                        "-fx-font-size: 20px"
+        );
+        backButton.setOnAction(event -> {
+            signInStage.close();
+        });
+
         // FileChooser for Photo ID
         FileChooser fileChooser = new FileChooser();
         Button uploadPhotoButton = new Button("Upload Photo ID");
@@ -185,7 +198,7 @@ public class SignInController {
         });
 
         // Centering the buttons
-        HBox buttonContainer = new HBox(10, uploadPhotoButton, submitButton);
+        HBox buttonContainer = new HBox(10, backButton, uploadPhotoButton, submitButton);
         buttonContainer.setAlignment(Pos.CENTER);
 
         // Add all components to the layout
