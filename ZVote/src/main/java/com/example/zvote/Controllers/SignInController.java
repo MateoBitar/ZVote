@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 
@@ -20,66 +21,122 @@ public class SignInController {
     public static void showSignInWindow(Stage primaryStage) {
         Stage signInStage = new Stage();
         signInStage.initModality(Modality.APPLICATION_MODAL);
-        signInStage.setTitle("Sign In - ZVote");
+        signInStage.setTitle("Sign In/Log In - ZVote");
         signInStage.setResizable(false);
         signInStage.initStyle(StageStyle.UNDECORATED);
 
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(20));
-        layout.setAlignment(Pos.CENTER_LEFT);
-        layout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
+        BorderPane layout = new BorderPane();
+        HBox form = new HBox();
+        form.setAlignment(Pos.CENTER);
+
+        VBox signInLayout = new VBox(15);
+        signInLayout.setPadding(new Insets(20));
+        signInLayout.setAlignment(Pos.TOP_LEFT);
+        signInLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
                 " -fx-border-radius: 10px");
 
-        Label title = new Label("Sign In");
-        title.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        VBox loginLayout = new VBox(15);
+        loginLayout.setPadding(new Insets(20));
+        loginLayout.setAlignment(Pos.TOP_LEFT);
+        loginLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
+                "-fx-border-radius: 10px");
+
+
+        Label STitle = new Label("Sign In");
+        STitle.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+
+        Label LTitle = new Label("Log In");
+        LTitle.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+
 
         // Username
-        Label usernameLabel = new Label("Username:");
-        usernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField usernameField = new TextField();
-        usernameField.setPromptText("Enter your username");
-        usernameField.setStyle(
+        Label SUsernameLabel = new Label("Username:");
+        SUsernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        TextField SUsernameField = new TextField();
+        SUsernameField.setPromptText("Enter your username");
+        SUsernameField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
                         "-fx-border-color: #C8F0FF; " +
                         "-fx-padding: 8px;" +
                         "-fx-border-width: 3px;"
         );
-        usernameField.setPrefWidth(250);
+        SUsernameField.setPrefWidth(250);
+
+        Label LUsernameLabel = new Label("Username:");
+        LUsernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        TextField LUsernameField = new TextField();
+        LUsernameField.setPromptText("Enter your username");
+        LUsernameField.setStyle(
+                "-fx-background-radius: 20px; " +
+                        "-fx-border-radius: 20px; " +
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
+        );
+        LUsernameField.setPrefWidth(250);
+
 
         // Email
-        Label emailLabel = new Label("Email:");
-        emailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField emailField = new TextField();
-        emailField.setPromptText("Enter your email");
-        emailField.setStyle(
+        Label SEmailLabel = new Label("Email:");
+        SEmailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        TextField SEmailField = new TextField();
+        SEmailField.setPromptText("Enter your email");
+        SEmailField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
                         "-fx-border-color: #C8F0FF; " +
                         "-fx-padding: 8px;" +
                         "-fx-border-width: 3px;"
         );
-        emailField.setPrefWidth(250);
+        SEmailField.setPrefWidth(250);
+
+        Label LEmailLabel = new Label("Email:");
+        LEmailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        TextField LEmailField = new TextField();
+        LEmailField.setPromptText("Enter your email");
+        LEmailField.setStyle(
+                "-fx-background-radius: 20px; " +
+                        "-fx-border-radius: 20px; " +
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
+        );
+        LEmailField.setPrefWidth(250);
+
 
         // Password
-        Label passwordLabel = new Label("Password:");
-        passwordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Enter your password");
-        passwordField.setStyle(
+        Label SPasswordLabel = new Label("Password:");
+        SPasswordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        PasswordField SPasswordField = new PasswordField();
+        SPasswordField.setPromptText("Enter your password");
+        SPasswordField.setStyle(
                 "-fx-background-radius: 20px; " +
                         "-fx-border-radius: 20px; " +
                         "-fx-border-color: #C8F0FF; " +
                         "-fx-padding: 8px;" +
                         "-fx-border-width: 3px;"
         );
-        passwordField.setPrefWidth(250);
+        SPasswordField.setPrefWidth(250);
+
+        Label LPasswordLabel = new Label("Password:");
+        LPasswordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        PasswordField LPasswordField = new PasswordField();
+        LPasswordField.setPromptText("Enter your password");
+        LPasswordField.setStyle(
+                "-fx-background-radius: 20px; " +
+                        "-fx-border-radius: 20px; " +
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-padding: 8px;" +
+                        "-fx-border-width: 3px;"
+        );
+        LPasswordField.setPrefWidth(250);
 
         // Phone Number Section
-        Label phoneLabel = new Label("Phone Number:");
-        phoneLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        HBox phoneBox = new HBox(10);
-        phoneBox.setAlignment(Pos.CENTER_LEFT);
+        Label SPhoneLabel = new Label("Phone Number:");
+        SPhoneLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
+        HBox SPhoneBox = new HBox(10);
+        SPhoneBox.setAlignment(Pos.CENTER_LEFT);
 
         ComboBox<String> countryCodeDropdown = new ComboBox<>();
         countryCodeDropdown.getItems().addAll(
@@ -107,21 +164,8 @@ public class SignInController {
         );
         phoneField.setPrefWidth(250);
 
-        phoneBox.getChildren().addAll(countryCodeDropdown, phoneField);
+        SPhoneBox.getChildren().addAll(countryCodeDropdown, phoneField);
 
-        Button backButton = new Button("\u2190"); // Unicode for a left-pointing arrow
-        backButton.setStyle(
-                "-fx-background-color: #C8F0FF; " +
-                        "-fx-text-fill: black; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-border-radius: 30px; " +
-                        "-fx-background-radius: 30px; " +
-                        "-fx-padding: 0px 10px;" +
-                        "-fx-font-size: 20px"
-        );
-        backButton.setOnAction(event -> {
-            signInStage.close();
-        });
 
         // FileChooser for Photo ID
         FileChooser fileChooser = new FileChooser();
@@ -147,8 +191,8 @@ public class SignInController {
 
 
         // Submit Button
-        Button submitButton = new Button("Submit");
-        submitButton.setStyle(
+        Button SSubmitButton = new Button("Submit");
+        SSubmitButton.setStyle(
                 "-fx-background-color: #C8F0FF; " +
                         "-fx-text-fill: black; " +
                         "-fx-font-weight: bold; " +
@@ -156,10 +200,10 @@ public class SignInController {
                         "-fx-background-radius: 30px; " +
                         "-fx-padding: 5px 10px;"
         );
-        submitButton.setOnAction(event -> {
+        SSubmitButton.setOnAction(event -> {
             // Validate inputs
-            if (usernameField.getText().isEmpty() || emailField.getText().isEmpty() ||
-                    passwordField.getText().isEmpty() || phoneField.getText().isEmpty()) {
+            if (SUsernameField.getText().isEmpty() || SEmailField.getText().isEmpty() ||
+                    SPasswordField.getText().isEmpty() || phoneField.getText().isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
                 return;
             }
@@ -173,9 +217,9 @@ public class SignInController {
                 }
 
                 UserModel newUser = new UserModel(
-                        usernameField.getText(),
-                        emailField.getText(),
-                        passwordField.getText(),
+                        SUsernameField.getText(),
+                        SEmailField.getText(),
+                        SPasswordField.getText(),
                         photoID,
                         countryCodeDropdown.getValue() + " " + phoneField.getText()
                 );
@@ -189,41 +233,75 @@ public class SignInController {
             }
         });
 
-        // Centering the buttons
-        HBox buttonContainer = new HBox(10, backButton, uploadPhotoButton, submitButton);
-        buttonContainer.setAlignment(Pos.CENTER);
+        Button LSubmitButton = new Button("Submit");
+        LSubmitButton.setStyle(
+                "-fx-background-color: #C8F0FF; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-border-radius: 30px; " +
+                        "-fx-background-radius: 30px; " +
+                        "-fx-padding: 5px 10px;"
+        );
+        LSubmitButton.setOnAction(event -> {
+                // Validate inputs
+                if (LUsernameField.getText().isEmpty() || LEmailField.getText().isEmpty() ||
+                        LPasswordField.getText().isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
+                } else {
+                    userSession.put("user", userSession.get("user"));
+                    new LandingPageController(primaryStage, userSession).showMain();
+                }
+        });
 
-        Label loginLabel = new Label("Already have an account? Log In");
-        loginLabel.setStyle("-fx-font-size: 10px;");
-        loginLabel.setOnMouseEntered(event -> {
-            loginLabel.setStyle("-fx-font-size: 10px; -fx-underline: true;");
-        });
-        loginLabel.setOnMouseExited(event -> {
-            loginLabel.setStyle("-fx-font-size: 10px; -fx-underline: false;");
-        });
-        loginLabel.setOnMouseClicked(event -> {
-            try {
-                signInStage.close();
-                // LogInController.showLogInWindow(primaryStage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
 
-        // Add all components to the layout
-        layout.getChildren().addAll(
-                title,
-                usernameLabel, usernameField,
-                emailLabel, emailField,
-                passwordLabel, passwordField,
-                phoneLabel, phoneBox,
-                loginLabel,
-                buttonContainer
+        Button backButton = new Button("Back"); // Unicode for a left-pointing arrow
+        backButton.setStyle(
+                "-fx-background-color: #FFFFFF; " +
+                        "-fx-border-color: #C8F0FF; " +
+                        "-fx-border-width: 3px; " +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-text-fill: black; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 0px 10px;" +
+                        "-fx-font-size: 15px"
+        );
+        backButton.setOnAction(event -> {
+            signInStage.close();
+        });
+        backButton.setPrefWidth(800);
+        backButton.setPrefHeight(35);
+
+
+        // Add all components to the signInLayout
+        signInLayout.getChildren().addAll(
+                STitle,
+                SUsernameLabel, SUsernameField,
+                SEmailLabel, SEmailField,
+                SPasswordLabel, SPasswordField,
+                SPhoneLabel, SPhoneBox,
+                uploadPhotoButton, SSubmitButton
         );
 
-        Scene scene = new Scene(layout, 350, 550);
+        loginLayout.getChildren().addAll(
+                LTitle,
+                LUsernameLabel, LUsernameField,
+                LEmailLabel, LEmailField,
+                LPasswordLabel, LPasswordField,
+                LSubmitButton
+        );
 
-        signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2);
+        signInLayout.setPrefHeight(300);
+        signInLayout.setPrefWidth(400);
+        loginLayout.setPrefHeight(300);
+        loginLayout.setPrefWidth(400);
+
+        form.getChildren().addAll(signInLayout, loginLayout);
+        layout.setCenter(form);
+        layout.setBottom(backButton);
+
+        Scene scene = new Scene(layout, 800, 635);
+
+        signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 800) / 2);
         signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50);
 
         signInStage.setScene(scene);
