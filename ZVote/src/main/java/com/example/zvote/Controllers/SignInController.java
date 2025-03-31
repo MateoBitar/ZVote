@@ -1,5 +1,6 @@
 package com.example.zvote.Controllers;
 
+import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -144,6 +145,7 @@ public class SignInController {
             }
         });
 
+
         // Submit Button
         Button submitButton = new Button("Submit");
         submitButton.setStyle(
@@ -170,32 +172,19 @@ public class SignInController {
                     photoID = new byte[0]; // Default empty photo ID
                 }
 
-                // Call UserService to add user
-                UserService.addUser(
+                UserModel newUser = new UserModel(
                         usernameField.getText(),
                         emailField.getText(),
                         passwordField.getText(),
                         photoID,
                         countryCodeDropdown.getValue() + " " + phoneField.getText()
                 );
+                UserService.addUser(newUser);
 
-                // Save user session details
-                userSession.put("username", usernameField.getText());
-                userSession.put("email", emailField.getText());
-                userSession.put("password", passwordField.getText());
-                userSession.put("phoneNb", countryCodeDropdown.getValue() + " " + phoneField.getText());
-
-                // Clear input fields
-                usernameField.clear();
-                emailField.clear();
-                passwordField.clear();
-                phoneField.clear();
-                countryCodeDropdown.setValue("+961");
-
-                LandingPageController main = new LandingPageController(primaryStage, userSession);
-                main.showMain();
+                userSession.put("user", newUser);
+                new LandingPageController(primaryStage, userSession).showMain();
             } catch (Exception e) {
-                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while uploading the photo.");
+                showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");
                 e.printStackTrace();
             }
         });
@@ -204,6 +193,23 @@ public class SignInController {
         HBox buttonContainer = new HBox(10, backButton, uploadPhotoButton, submitButton);
         buttonContainer.setAlignment(Pos.CENTER);
 
+        Label loginLabel = new Label("Already have an account? Log In");
+        loginLabel.setStyle("-fx-font-size: 10px;");
+        loginLabel.setOnMouseEntered(event -> {
+            loginLabel.setStyle("-fx-font-size: 10px; -fx-underline: true;");
+        });
+        loginLabel.setOnMouseExited(event -> {
+            loginLabel.setStyle("-fx-font-size: 10px; -fx-underline: false;");
+        });
+        loginLabel.setOnMouseClicked(event -> {
+            try {
+                signInStage.close();
+                // LogInController.showLogInWindow(primaryStage);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
         // Add all components to the layout
         layout.getChildren().addAll(
                 title,
@@ -211,10 +217,11 @@ public class SignInController {
                 emailLabel, emailField,
                 passwordLabel, passwordField,
                 phoneLabel, phoneBox,
+                loginLabel,
                 buttonContainer
         );
 
-        Scene scene = new Scene(layout, 350, 500);
+        Scene scene = new Scene(layout, 350, 550);
 
         signInStage.setX((Screen.getPrimary().getBounds().getWidth() - 350) / 2);
         signInStage.setY((Screen.getPrimary().getBounds().getHeight() - 500) / 2 - 50);

@@ -27,6 +27,10 @@ public class UserModel {
         return user_ID;
     }
 
+    public void setUser_ID(int user_ID) {
+        this.user_ID = user_ID;
+    }
+
     public String getUsername() {
         return username;
     }
