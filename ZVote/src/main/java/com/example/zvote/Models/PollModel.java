@@ -25,11 +25,15 @@ public class PollModel {
         setStart_date(start_date);
         setEnd_date(end_date);
         setAdmin_ID(admin_ID);
+        this.nbOfVotes = 0;  // Initialize to 0
+        this.nbOfAbstentions = 0;  // Initialize to 0
     }
 
     public int getPoll_ID() {
         return poll_ID;
     }
+
+    public void setPoll_ID(int poll_ID) { this.poll_ID = poll_ID; }
 
     public String getTitle() {
         return title;
