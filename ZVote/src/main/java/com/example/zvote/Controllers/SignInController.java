@@ -217,6 +217,13 @@ public class SignInController {
                 userService.addUser(newUser);
 
                 userSession.put("user", newUser);
+                SUsernameField.clear();
+                SEmailField.clear();
+                SPasswordField.clear();
+                phoneField.clear();
+                countryCodeDropdown.setValue("+961");
+                uploadPhotoButton.setText("Upload Photo ID");
+
                 new LandingPageController(primaryStage, userSession).showMain();
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");

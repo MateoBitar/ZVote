@@ -34,7 +34,7 @@ public class UserService {
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getUser_email());
-            statement.setString(3, UserModel.hashPassword(user.getUser_pass()));
+            statement.setString(3, user.getUser_pass());
             statement.setBytes(4, user.getUser_photoID());
             statement.setString(5, user.getPhoneNb());
             statement.setString(6, user.getRole());

@@ -17,6 +17,8 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import static com.example.zvote.Models.UserModel.hashPassword;
+
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
