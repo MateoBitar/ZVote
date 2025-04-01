@@ -88,11 +88,11 @@ public class UserModel {
         return role;
     }
 
-    private String hashPassword(String password) {
+    public static String hashPassword(String password) {
         return stringToHex(password);
     }
 
-    public String stringToHex(String input) {
+    public static String stringToHex(String input) {
         byte[] bytes = input.getBytes(); // Convert String to byte array
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {

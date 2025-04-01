@@ -8,6 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.zvote.Models.UserModel.hashPassword;
+
 public class UserService {
     private static Connection connection;
 
@@ -32,7 +34,7 @@ public class UserService {
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getUser_email());
-            statement.setString(3, user.getUser_pass()); // Password is already hashed in the model
+            statement.setString(3, hashPassword(user.getUser_pass()));
             statement.setBytes(4, user.getUser_photoID());
             statement.setString(5, user.getPhoneNb());
             statement.setString(6, user.getRole());
@@ -53,18 +55,29 @@ public class UserService {
         return users;
     }
 
-    // Update a user
-    public void updateUser(int userId, UserModel updatedUser) throws SQLException {
-        String query = "UPDATE users SET username = ?, user_email = ?, user_pass = ?, user_photoID = ?, phoneNb = ?, role = ? WHERE user_ID = ?";
+    // Fetch user by username
+    public UserModel getUserByUsername(String username) throws SQLException {
+        String query = "SELECT * FROM users WHERE username = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, updatedUser.getUsername());
-            statement.setString(2, updatedUser.getUser_email());
-            statement.setString(3, updatedUser.getUser_pass()); // Already hashed in UserModel
-            statement.setBytes(4, updatedUser.getUser_photoID());
-            statement.setString(5, updatedUser.getPhoneNb());
-            statement.setString(6, updatedUser.getRole());
-            statement.setInt(7, userId);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return UserMapper.mapResultSetToUser(resultSet);
+            }
+        }
+        return null;
+    }
 
+    // Update a user
+    public void updateUser(UserModel updatedUser) throws SQLException {
+        String query = "UPDATE users SET user_email = ?, user_pass = ?, user_photoID = ?, phoneNb = ?, role = ? WHERE username = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, updatedUser.getUser_email());
+            statement.setString(2, hashPassword(updatedUser.getUser_pass()));
+            statement.setBytes(3, updatedUser.getUser_photoID());
+            statement.setString(4, updatedUser.getPhoneNb());
+            statement.setString(5, updatedUser.getRole());
+            statement.setString(6, updatedUser.getUsername());
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new IllegalArgumentException("User not found.");
@@ -82,5 +95,19 @@ public class UserService {
                 throw new IllegalArgumentException("No user found with the specified username.");
             }
         }
+    }
+
+    // Check login credentials
+    public boolean checkLogin(String username, String password) throws SQLException {
+        String query = "SELECT user_pass FROM users WHERE username = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String storedPassword = resultSet.getString("user_pass");
+                return storedPassword.equals(hashPassword(password)); // Compare hashed passwords
+            }
+        }
+        return false;
     }
 }
