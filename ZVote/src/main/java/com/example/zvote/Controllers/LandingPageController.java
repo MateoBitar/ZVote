@@ -21,7 +21,11 @@ public class LandingPageController {
     }
 
     public void showMain() {
+        VBox layout = new VBox();
+        layout.setAlignment(Pos.CENTER);
 
+        HBox topBar = new HBox();
 
+        primaryStage.setScene(new Scene(layout));
     }
 }

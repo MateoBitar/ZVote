@@ -3,6 +3,7 @@ package com.example.zvote.Models;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.MessageDigest;
 import java.util.Arrays;
 
 public class UserModel {
@@ -89,16 +90,19 @@ public class UserModel {
     }
 
     public static String hashPassword(String password) {
-        return stringToHex(password);
-    }
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashedBytes = md.digest(password.getBytes("UTF-8"));
 
-    public static String stringToHex(String input) {
-        byte[] bytes = input.getBytes(); // Convert String to byte array
-        StringBuilder hexString = new StringBuilder();
-        for (byte b : bytes) {
-            hexString.append(String.format("%02x", b)); // Format each byte as a hex value
+            // Convert bytes to a simple hex string
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hashedBytes) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();
+        } catch (Exception e) {
+            return null; // In case of error
         }
-        return hexString.toString();
     }
 
     @Override

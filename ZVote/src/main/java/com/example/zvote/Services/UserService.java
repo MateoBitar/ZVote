@@ -11,15 +11,15 @@ import java.util.List;
 import static com.example.zvote.Models.UserModel.hashPassword;
 
 public class UserService {
-    private static Connection connection;
+    private Connection connection;
 
     public UserService() throws Exception {
         DBHandler dbHandler = new DBHandler();
-        this.connection = dbHandler.getConnection();
+        connection = dbHandler.getConnection();
     }
 
     // Save a user
-    public static void addUser(UserModel user) throws SQLException {
+    public void addUser(UserModel user) throws SQLException {
         String checkQuery = "SELECT COUNT(*) FROM users WHERE username = ?";
         try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
             checkStatement.setString(1, user.getUsername());
@@ -34,7 +34,7 @@ public class UserService {
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, user.getUsername());
             statement.setString(2, user.getUser_email());
-            statement.setString(3, hashPassword(user.getUser_pass()));
+            statement.setString(3, UserModel.hashPassword(user.getUser_pass()));
             statement.setBytes(4, user.getUser_photoID());
             statement.setString(5, user.getPhoneNb());
             statement.setString(6, user.getRole());
@@ -99,12 +99,19 @@ public class UserService {
 
     // Check login credentials
     public boolean checkLogin(String username, String password) throws SQLException {
+        if (connection == null) {
+            System.out.println("Database connection is null!");
+            return false;
+        }
+
         String query = "SELECT user_pass FROM users WHERE username = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String storedPassword = resultSet.getString("user_pass");
+                System.out.println("Stored Hash: " + storedPassword);
+                System.out.println("Computed Hash: " + hashPassword(password));
                 return storedPassword.equals(hashPassword(password)); // Compare hashed passwords
             }
         }

@@ -212,7 +212,9 @@ public class SignInController {
                         photoID,
                         countryCodeDropdown.getValue() + " " + phoneField.getText()
                 );
-                UserService.addUser(newUser);
+
+                UserService userService = new UserService();
+                userService.addUser(newUser);
 
                 userSession.put("user", newUser);
                 new LandingPageController(primaryStage, userSession).showMain();
@@ -236,8 +238,27 @@ public class SignInController {
                 if (LUsernameField.getText().isEmpty() || LPasswordField.getText().isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
                 } else {
-                    userSession.put("user", userSession.get("user"));
-                    new LandingPageController(primaryStage, userSession).showMain();
+                    // Call the Login function from UserServices to validate credentials
+                    boolean isValidUser = false;
+
+                    try {
+                        UserService userService = new UserService();
+                        isValidUser = userService.checkLogin(LUsernameField.getText(), LPasswordField.getText());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (isValidUser) {
+                        // Store the user information in the session (you can customize this as needed)
+                        userSession.put("user", LUsernameField.getText());
+                        // Navigate to the landing page
+                        new LandingPageController(primaryStage, userSession).showMain();
+                    } else {
+                        // Show error alert for invalid credentials
+                        showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password. Please try again.");
+                        LUsernameField.clear();
+                        LPasswordField.clear();
+                    }
                 }
         });
 
