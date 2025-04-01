@@ -6,6 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.*;
 import javafx.stage.*;
@@ -90,19 +92,6 @@ public class SignInController {
                         "-fx-border-width: 3px;"
         );
         SEmailField.setPrefWidth(250);
-
-        Label LEmailLabel = new Label("Email:");
-        LEmailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 15px;");
-        TextField LEmailField = new TextField();
-        LEmailField.setPromptText("Enter your email");
-        LEmailField.setStyle(
-                "-fx-background-radius: 20px; " +
-                        "-fx-border-radius: 20px; " +
-                        "-fx-border-color: #C8F0FF; " +
-                        "-fx-padding: 8px;" +
-                        "-fx-border-width: 3px;"
-        );
-        LEmailField.setPrefWidth(250);
 
 
         // Password
@@ -244,8 +233,7 @@ public class SignInController {
         );
         LSubmitButton.setOnAction(event -> {
                 // Validate inputs
-                if (LUsernameField.getText().isEmpty() || LEmailField.getText().isEmpty() ||
-                        LPasswordField.getText().isEmpty()) {
+                if (LUsernameField.getText().isEmpty() || LPasswordField.getText().isEmpty()) {
                     showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled!");
                 } else {
                     userSession.put("user", userSession.get("user"));
@@ -272,6 +260,16 @@ public class SignInController {
         backButton.setPrefHeight(35);
 
 
+        ImageView ballotImage = new ImageView(new Image(SignInController.class.getResource("/images/Ballot Image.png").toExternalForm()));
+        ballotImage.setPreserveRatio(false);
+        ballotImage.setFitHeight(250);
+        ballotImage.setFitWidth(300);
+
+        HBox ballotWrapper = new HBox();
+        ballotWrapper.setAlignment(Pos.CENTER);
+        ballotWrapper.getChildren().add(ballotImage);
+
+
         // Add all components to the signInLayout
         signInLayout.getChildren().addAll(
                 STitle,
@@ -285,9 +283,9 @@ public class SignInController {
         loginLayout.getChildren().addAll(
                 LTitle,
                 LUsernameLabel, LUsernameField,
-                LEmailLabel, LEmailField,
                 LPasswordLabel, LPasswordField,
-                LSubmitButton
+                LSubmitButton,
+                ballotWrapper
         );
 
         signInLayout.setPrefHeight(300);
