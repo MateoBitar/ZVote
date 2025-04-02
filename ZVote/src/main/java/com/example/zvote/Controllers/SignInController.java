@@ -224,7 +224,8 @@ public class SignInController {
                 countryCodeDropdown.setValue("+961");
                 uploadPhotoButton.setText("Upload Photo ID");
 
-                new LandingPageController(primaryStage, userSession).showMain();
+                signInStage.close();
+                LandingPageController.showLandingPage(primaryStage);
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");
                 e.printStackTrace();
@@ -258,8 +259,11 @@ public class SignInController {
                     if (isValidUser) {
                         // Store the user information in the session (you can customize this as needed)
                         userSession.put("user", LUsernameField.getText());
-                        // Navigate to the landing page
-                        new LandingPageController(primaryStage, userSession).showMain();
+                        LUsernameField.clear();
+                        LPasswordField.clear();
+
+                        signInStage.close();
+                        LandingPageController.showLandingPage(primaryStage);
                     } else {
                         // Show error alert for invalid credentials
                         showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password. Please try again.");

@@ -30,7 +30,7 @@ public class Main extends Application {
 
         HBox menu = new HBox(-10);
 
-        // About is now a Button
+        // About Button
         Button about = new Button("About");
         about.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20");
@@ -41,7 +41,7 @@ public class Main extends Application {
         about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
-        // Contact is now a Button
+        // Contact a Button
         Button contact = new Button("Contact");
         contact.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20");
@@ -51,7 +51,7 @@ public class Main extends Application {
         contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
-        // Profile is now a Button
+        // Profile Button
         Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
         profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20");
