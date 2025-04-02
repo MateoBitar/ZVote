@@ -15,6 +15,12 @@ public class PollMapper {
                 rs.getInt("admin_ID")
         );
         poll.setPoll_ID(rs.getInt("poll_ID")); // Ensure poll_ID is retrieved
+
+        // Retrieve the additional fields (status, nbOfVotes, nbOfAbstentions)
+        poll.setStatus(PollModel.Status.valueOf(rs.getString("status")));
+        poll.setNbOfVotes(rs.getInt("nbOfVotes"));
+        poll.setNbOfAbstentions(rs.getInt("nbOfAbstentions"));
+
         return poll;
     }
 }
