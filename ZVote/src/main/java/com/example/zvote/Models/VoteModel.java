@@ -36,6 +36,10 @@ public class VoteModel {
         return timestamp;
     }
 
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
+    }
+
     public int getBlank() {
         return blank;
     }

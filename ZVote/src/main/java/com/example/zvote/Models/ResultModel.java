@@ -23,6 +23,10 @@ public class ResultModel {
         return result_ID;
     }
 
+    public void setResult_ID(int result_ID) {
+        this.result_ID = result_ID;
+    }
+
     public Date getRegistration_date() {
         return registration_date;
     }
@@ -41,6 +45,10 @@ public class ResultModel {
 
     public int getVotes_casted() {
         return votes_casted;
+    }
+
+    public void setVotes_casted(int votes_casted) {
+        this.votes_casted = votes_casted;
     }
 
     public Date getWithdrawal_date() {

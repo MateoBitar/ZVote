@@ -23,6 +23,10 @@ public class CandidateModel {
         return candidate_ID;
     }
 
+    public void setCandidate_ID(int candidate_ID) {
+        this.candidate_ID = candidate_ID;
+    }
+
     public String getName() {
         return name;
     }
