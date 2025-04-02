@@ -21,7 +21,7 @@ public class UserModel {
         setUser_pass(user_pass);
         setUser_photoID(user_photoID);
         setPhoneNb(phoneNb);
-        setRole("voter");
+        role = "voter";
     }
 
     public int getUser_ID() {
@@ -88,8 +88,6 @@ public class UserModel {
     public String getRole() {
         return role;
     }
-
-    public void setRole(String role) { this.role = role; }
 
     public static String hashPassword(String password) {
         try {

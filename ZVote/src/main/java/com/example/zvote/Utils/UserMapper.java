@@ -15,7 +15,6 @@ public class UserMapper {
                 rs.getString("phoneNb")
         );
         user.setUser_ID(rs.getInt("user_ID")); // Ensure user_ID is retrieved
-        user.setRole(rs.getString("role"));
         return user;
     }
 }
