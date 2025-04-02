@@ -25,8 +25,8 @@ public class PollModel {
         setStart_date(start_date);
         setEnd_date(end_date);
         setAdmin_ID(admin_ID);
-        this.nbOfVotes = 0;  // Initialize to 0
-        this.nbOfAbstentions = 0;  // Initialize to 0
+        setNbOfVotes(0);  // Initialize to 0
+        setNbOfAbstentions(0);  // Initialize to 0
     }
 
     public int getPoll_ID() {
@@ -71,13 +71,19 @@ public class PollModel {
         return status;
     }
 
+    public void setStatus(Status status) { this.status = status; }
+
     public int getNbOfVotes() {
         return nbOfVotes;
     }
 
+    public void setNbOfVotes(int nbOfVotes) { this.nbOfVotes = nbOfVotes; }
+
     public int getNbOfAbstentions() {
         return nbOfAbstentions;
     }
+
+    public void setNbOfAbstentions(int nbOfAbstentions) { this.nbOfAbstentions = nbOfAbstentions; }
 
     public int getAdmin_ID() {
         return admin_ID;
