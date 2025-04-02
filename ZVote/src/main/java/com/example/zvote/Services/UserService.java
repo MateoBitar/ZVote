@@ -46,8 +46,8 @@ public class UserService {
     public List<UserModel> getAllUsers() throws SQLException {
         String query = "SELECT * FROM users";
         List<UserModel> users = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 users.add(UserMapper.mapResultSetToUser(resultSet));
             }

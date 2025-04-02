@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PollService {
-    private static Connection connection;
+    private Connection connection;
 
     public PollService() throws Exception {
         DBHandler dbHandler = new DBHandler();
@@ -43,8 +43,8 @@ public class PollService {
     public List<PollModel> getAllPolls() throws SQLException {
         String query = "SELECT * FROM polls";
         List<PollModel> polls = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 polls.add(PollMapper.mapResultSetToPoll(resultSet));
             }
@@ -67,7 +67,7 @@ public class PollService {
 
     // Update a poll
     public void updatePoll(PollModel poll) throws SQLException {
-        String query = "UPDATE polls SET title = ?, description = ?, start_date = ?, end_date = ? WHERE poll_id = ?";
+        String query = "UPDATE polls SET title = ?, description = ?, start_date = ?, end_date = ? WHERE poll_ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, poll.getTitle());
             statement.setString(2, poll.getDescription());
