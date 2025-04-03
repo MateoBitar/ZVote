@@ -9,9 +9,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
@@ -25,6 +27,15 @@ public class Main extends Application {
         topBar.setPadding(new Insets(10,10,10,40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
 
+        // Create a shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(5);
+        shadow.setOffsetY(2);
+        shadow.setColor(Color.LIGHTGRAY);
+
+        // Apply shadow to topBar
+        topBar.setEffect(shadow);
+
         Label logo = new Label("ZVote");
         logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
 
@@ -37,8 +48,10 @@ public class Main extends Application {
         about.setPrefHeight(30);
         about.setPrefWidth(90);
         // Add hover effects for buttons
-        about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
         // Contact a Button
@@ -47,8 +60,10 @@ public class Main extends Application {
                 " -fx-font-weight: bold; -fx-background-radius: 20");
         contact.setPrefHeight(30);
         contact.setPrefWidth(100);
-        contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
         // Profile Button
@@ -57,8 +72,10 @@ public class Main extends Application {
                 " -fx-font-weight: bold; -fx-background-radius: 20");
         profileIcon.setPrefHeight(30);
         profileIcon.setPrefWidth(70);
-        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         menu.getChildren().addAll(about, contact, profileIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
@@ -96,8 +113,10 @@ public class Main extends Application {
         voteNow.setPrefWidth(200);
         voteNow.setPadding(new Insets(3,50,3,50));
 
-        voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        voteNow.setOnMouseExited(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        voteNow.setOnMouseExited(e -> voteNow.setStyle(voteNow.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         textSection.getChildren().addAll(title, subtitle, tagline, voteNow);
         textSection.setAlignment(Pos.CENTER);
@@ -109,7 +128,7 @@ public class Main extends Application {
         VBox.setVgrow(content, Priority.ALWAYS);
 
         // Main Layout
-        VBox mainLayout = new VBox(10);
+        VBox mainLayout = new VBox(2);
         mainLayout.getChildren().addAll(topBar, content);
 
         Scene scene = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);

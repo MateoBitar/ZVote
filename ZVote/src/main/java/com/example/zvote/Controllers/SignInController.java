@@ -23,7 +23,7 @@ public class SignInController {
     public static void showSignInWindow(Stage primaryStage) {
         Stage signInStage = new Stage();
         signInStage.initModality(Modality.APPLICATION_MODAL);
-        signInStage.setTitle("Sign In/Log In - ZVote");
+        signInStage.setTitle("Sign Up/Log In - ZVote");
         signInStage.setResizable(false);
         signInStage.initStyle(StageStyle.UNDECORATED);
 
@@ -34,17 +34,15 @@ public class SignInController {
         VBox signInLayout = new VBox(15);
         signInLayout.setPadding(new Insets(20));
         signInLayout.setAlignment(Pos.TOP_LEFT);
-        signInLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
-                " -fx-border-radius: 10px");
+        signInLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
 
         VBox loginLayout = new VBox(15);
         loginLayout.setPadding(new Insets(20));
         loginLayout.setAlignment(Pos.TOP_LEFT);
-        loginLayout.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;" +
-                "-fx-border-radius: 10px");
+        loginLayout.setStyle("-fx-background-color: #C8F0FF;");
 
 
-        Label STitle = new Label("Sign In");
+        Label STitle = new Label("Sign Up");
         STitle.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
 
         Label LTitle = new Label("Log In");
@@ -234,7 +232,7 @@ public class SignInController {
 
         Button LSubmitButton = new Button("Submit");
         LSubmitButton.setStyle(
-                "-fx-background-color: #C8F0FF; " +
+                "-fx-background-color: #FFFFFF; " +
                         "-fx-text-fill: black; " +
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
@@ -279,7 +277,6 @@ public class SignInController {
                 "-fx-background-color: #FFFFFF; " +
                         "-fx-border-color: #C8F0FF; " +
                         "-fx-border-width: 3px; " +
-                        "-fx-border-radius: 10px; " +
                         "-fx-text-fill: black; " +
                         "-fx-font-weight: bold; " +
                         "-fx-padding: 0px 10px;" +

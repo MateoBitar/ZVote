@@ -3,7 +3,7 @@ package com.example.zvote.Connection;
 import java.sql.*;
 
 public class DBHandler {
-    private static final String URL = "jdbc:mysql://192.164.1.4:3307/zvote";
+    private static final String URL = "jdbc:mysql://192.168.1.4:3307/zvote";
     private static final String USER = "marco";
     private static final String PASSWORD = "Marco.Bitar21";
 
