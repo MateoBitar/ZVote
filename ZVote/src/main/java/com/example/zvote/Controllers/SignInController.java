@@ -261,7 +261,11 @@ public class SignInController {
                         LPasswordField.clear();
 
                         signInStage.close();
-                        LandingPageController.showLandingPage(primaryStage);
+                        try {
+                            LandingPageController.showLandingPage(primaryStage);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     } else {
                         // Show error alert for invalid credentials
                         showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password. Please try again.");

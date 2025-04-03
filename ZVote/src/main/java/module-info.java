@@ -12,6 +12,7 @@ module com.example.zvote {
     requires com.almasb.fxgl.all;
     requires java.sql;
     requires java.desktop;
+    requires mysql.connector.j;
 
     opens com.example.zvote to javafx.fxml;
     exports com.example.zvote;

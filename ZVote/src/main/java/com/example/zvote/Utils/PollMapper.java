@@ -17,7 +17,8 @@ public class PollMapper {
         poll.setPoll_ID(rs.getInt("poll_ID")); // Ensure poll_ID is retrieved
 
         // Retrieve the additional fields (status, nbOfVotes, nbOfAbstentions)
-        poll.setStatus(PollModel.Status.valueOf(rs.getString("status")));
+        String statusString = rs.getString("status"); // Replace with actual DB column
+        PollModel.Status status = PollModel.Status.valueOf(statusString.toUpperCase());
         poll.setNbOfVotes(rs.getInt("nbOfVotes"));
         poll.setNbOfAbstentions(rs.getInt("nbOfAbstentions"));
 

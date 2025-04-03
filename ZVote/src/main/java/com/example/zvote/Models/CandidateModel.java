@@ -3,6 +3,7 @@ package com.example.zvote.Models;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class CandidateModel {
@@ -46,12 +47,18 @@ public class CandidateModel {
         else {
             try {
                 // Use a default photo path and convert it to a byte array
-                Path defaultPhotoPath = Path.of("\uD83D\uDC64");
-                this.photo = Files.readAllBytes(defaultPhotoPath);
+                Path defaultPhotoPath = Paths.get("C:\\Computer Science projects\\Repositories\\ZVote\\ZVote\\src\\main\\resources\\images\\Profile Pic.png"); // Replace photoPath with your actual path variable
+                if (Files.exists(defaultPhotoPath)) {
+                    // Proceed with reading the file
+                    this.photo = Files.readAllBytes(defaultPhotoPath);
+                } else {
+                    System.out.println("File not found: /images/Profile Pic.png");
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 this.photo = new byte[0]; // Fallback to empty byte array on error
             }
+
         }
 
     }
