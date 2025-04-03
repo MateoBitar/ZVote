@@ -2,6 +2,7 @@ package com.example.zvote.Controllers;
 
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
+import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.PollService;
 import javafx.animation.TranslateTransition;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LandingPageController {
-    public static void showLandingPage(Stage primaryStage) throws Exception {
+    public static void showLandingPage(Stage primaryStage,Map<String, Object> userSession) throws Exception {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
         // topBar
@@ -56,7 +57,10 @@ public class LandingPageController {
         profileIcon.setTranslateX(150);
         profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
         profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
-
+        profileIcon.setOnAction(e -> {
+                UserController userController = new UserController();
+                userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
+        });
         Label menuIcon = new Label("\u283F"); // Unicode for ☰ (menu icon)
         menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
         menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));

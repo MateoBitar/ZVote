@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SignInController {
-    private static Map<String, Object> userSession = new HashMap<>(); // Holds session details
+    public static Map<String, Object> userSession = new HashMap<>(); // Holds session details
 
     public static void showSignInWindow(Stage primaryStage) {
         Stage signInStage = new Stage();
@@ -215,6 +215,7 @@ public class SignInController {
                 userService.addUser(newUser);
 
                 userSession.put("user", newUser);
+
                 SUsernameField.clear();
                 SEmailField.clear();
                 SPasswordField.clear();
@@ -223,7 +224,7 @@ public class SignInController {
                 uploadPhotoButton.setText("Upload Photo ID");
 
                 signInStage.close();
-                LandingPageController.showLandingPage(primaryStage);
+                LandingPageController.showLandingPage(primaryStage, userSession);
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");
                 e.printStackTrace();
@@ -255,18 +256,29 @@ public class SignInController {
                     }
 
                     if (isValidUser) {
-                        // Store the user information in the session (you can customize this as needed)
-                        userSession.put("user", LUsernameField.getText());
-                        LUsernameField.clear();
-                        LPasswordField.clear();
-
-                        signInStage.close();
                         try {
-                            LandingPageController.showLandingPage(primaryStage);
+                            UserService userService = new UserService(); // Create an instance
+                            UserModel user = userService.getUserByUsername(LUsernameField.getText()); // Call the method on the instance
+
+                            // Store the complete user information in the session
+                            userSession.put("user", user);
+
+                            // Clear fields after successful login
+                            LUsernameField.clear();
+                            LPasswordField.clear();
+
+                            // Close the sign-in stage and navigate to the Landing Page
+                            signInStage.close();
+
+                            // Pass the primaryStage and userSession to the LandingPageController
+                            LandingPageController.showLandingPage(primaryStage, userSession);
+
                         } catch (Exception e) {
-                            throw new RuntimeException(e);
+                            showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while transitioning to the landing page.");
+                            e.printStackTrace();
                         }
-                    } else {
+                    }
+                    else {
                         // Show error alert for invalid credentials
                         showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password. Please try again.");
                         LUsernameField.clear();
