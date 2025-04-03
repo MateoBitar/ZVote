@@ -70,7 +70,7 @@ public class Main extends Application {
         StackPane content = new StackPane();
         content.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        ImageView votingImage = new ImageView(new Image(getClass().getResource("/images/Main Page.jpg").toExternalForm()));
+        ImageView votingImage = new ImageView(new Image(getClass().getResource("/images/Main Page.png").toExternalForm()));
         votingImage.setPreserveRatio(false);
 
         // Make the image resize with the window
@@ -79,9 +79,9 @@ public class Main extends Application {
 
         // Text Section
         VBox textSection = new VBox(20);
-        textSection.setPadding(new Insets(50, 50, 250, 1000));
+        textSection.setPadding(new Insets(50, 50, 250, 1100));
         Label title = new Label("ZVote");
-        title.setFont(Font.font("Onyx", FontWeight.BOLD, 100));
+        title.setFont(Font.font("Onyx", FontWeight.EXTRA_BOLD, 150));
 
         Label subtitle = new Label("Online Voting System");
         subtitle.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
