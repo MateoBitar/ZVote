@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -22,9 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 public class LandingPageController {
-    private Stage primaryStage;
-    private Map<String, Object> userSession;
-
     public static void showLandingPage(Stage primaryStage) throws Exception {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
@@ -77,6 +75,15 @@ public class LandingPageController {
         pollGrid.setVgap(30);
         pollGrid.setAlignment(Pos.CENTER);
 
+
+        // Wrap the pollGrid in a ScrollPane
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(pollGrid);
+        scrollPane.setFitToWidth(true);  // Ensures the scroll pane expands to the full width
+        scrollPane.setFitToHeight(true); // Ensures the scroll pane expands to the full height
+        scrollPane.setStyle("-fx-background-color: transparent;");
+
+
         PollService pollService = new PollService();
         try {
             List<PollModel> polls = pollService.getAllPolls();
@@ -92,7 +99,7 @@ public class LandingPageController {
                                 "-fx-border-color: #000000;" +
                                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.0, 3, 3);"
                 );
-                pollCard.setPrefSize(300, 400);
+                pollCard.setPrefSize(300,400);
 
                 Label pollLabel = new Label(poll.getTitle());
                 pollLabel.setStyle(
@@ -114,12 +121,19 @@ public class LandingPageController {
 
                 // Create a VBox to hold candidate names
                 VBox candidatesBox = new VBox(5); // 5px spacing between candidate names
-                candidatesBox.setAlignment(Pos.CENTER);
+                candidatesBox.setAlignment(Pos.TOP_LEFT);
+                candidatesBox.setPadding(new Insets(20, 0, 0, 0));
 
-                // Add each candidate as a Label
-                Label candidateLabel = new Label();
+                Label candidatesLabel = new Label("Candidates:");
+                candidatesLabel.setStyle(
+                        "-fx-font-weight: bold;" +
+                                "-fx-font-size: 20px;"
+                );
+
+                candidatesBox.getChildren().add(candidatesLabel);
+
                 for (CandidateModel candidate : candidates) {
-                    candidateLabel = new Label(candidate.getName());
+                    Label candidateLabel = new Label(candidate.getName());
                     candidateLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
                     candidatesBox.getChildren().add(candidateLabel);
                 }
@@ -133,7 +147,8 @@ public class LandingPageController {
                         "-fx-background-color: #C8F0FF; " +
                                 "-fx-text-fill: black; " +
                                 "-fx-border-radius: 5px;" +
-                                "-fx-border-color: #000000; " +
+                                "-fx-border-color: #000000;" +
+                                "-fx-border-width: 2px; " +
                                 "-fx-font-size: 14px; " +
                                 "-fx-font-weight: bold; " +
                                 "-fx-cursor: hand; " +
@@ -141,7 +156,7 @@ public class LandingPageController {
                 );
                 viewPollButton.setPrefHeight(30);
 
-                pollCard.getChildren().addAll(pollLabel, candidateLabel, spacer, viewPollButton);
+                pollCard.getChildren().addAll(pollLabel, candidatesBox, spacer, viewPollButton);
 
                 // Hover effect for moving the card up
                 pollCard.setOnMouseEntered(e -> {
