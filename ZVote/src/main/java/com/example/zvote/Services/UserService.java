@@ -73,7 +73,7 @@ public class UserService {
         String query = "UPDATE users SET user_email = ?, user_pass = ?, user_photoID = ?, phoneNb = ?, role = ? WHERE username = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, updatedUser.getUser_email());
-            statement.setString(2, hashPassword(updatedUser.getUser_pass()));
+            statement.setString(2, updatedUser.getUser_pass());
             statement.setBytes(3, updatedUser.getUser_photoID());
             statement.setString(4, updatedUser.getPhoneNb());
             statement.setString(5, updatedUser.getRole());

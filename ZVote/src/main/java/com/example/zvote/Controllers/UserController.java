@@ -13,8 +13,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
@@ -97,32 +99,41 @@ public class UserController {
         userInfoSection.setPadding(new Insets(20));
         userInfoSection.setAlignment(Pos.TOP_CENTER);
 
+        // User Info Section
+        VBox userContentSection = new VBox();
+        userContentSection.setPadding(new Insets(20));
+        userContentSection.setAlignment(Pos.CENTER_LEFT);
+
         // Title
         Label title = new Label("User Profile");
-        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+        title.setStyle("-fx-font-size: 50px; -fx-font-weight: BOLD; -fx-text-fill: #333333;");
         BorderPane.setAlignment(title, Pos.CENTER);
         BorderPane.setMargin(title, new Insets(20, 0, 20, 0));
 
         // Username
         Label usernameLabel = new Label("Username: " + user.getUsername());
-        usernameLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #555555;");
+        usernameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #555555;");
 
         // Email
         Label emailLabel = new Label("Email: " + user.getUser_email());
-        emailLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
+        emailLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
 
         // Phone Number
         Label phoneLabel = new Label("Phone Number: " + user.getPhoneNb());
-        phoneLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
+        phoneLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
 
         // Role
         Label roleLabel = new Label("Role: " + user.getRole());
-        roleLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #555555;");
+        roleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
+
+        userContentSection.getChildren().addAll(usernameLabel, emailLabel, phoneLabel, roleLabel);
+        userContentSection.setPadding(new Insets(20, 0,0,720));
+        userContentSection.setSpacing(10);
 
         // Photo
         ImageView photoView = new ImageView();
-        photoView.setFitWidth(150);
-        photoView.setFitHeight(150);
+        photoView.setFitWidth(200);
+        photoView.setFitHeight(200);
         photoView.setStyle("-fx-border-color: #C8F0FF; -fx-border-width: 3px; -fx-border-radius: 10px;");
         if (user.getUser_photoID() != null && user.getUser_photoID().length > 0) {
             photoView.setImage(new Image(new ByteArrayInputStream(user.getUser_photoID())));
@@ -132,69 +143,117 @@ public class UserController {
         }
 
         // Add user info to section
-        userInfoSection.getChildren().addAll(title, photoView, usernameLabel, emailLabel, phoneLabel, roleLabel);
-
+        userInfoSection.getChildren().addAll(title, photoView, userContentSection);
+        userInfoSection.setPadding(new Insets(100, 0, 0, 0));
         layout.setCenter(userInfoSection);
 
         // Buttons Section
         HBox buttonSection = new HBox(20);
-        buttonSection.setPadding(new Insets(20));
+        buttonSection.setPadding(new Insets(0, 0 , 40, 0));
         buttonSection.setAlignment(Pos.CENTER);
 
         // Update Info Button
         Button updateButton = new Button("Update Info");
-        updateButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 10px;");
-        updateButton.setOnAction(event -> showUpdateForm(layout, userInfoSection));
+        updateButton.setStyle("-fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 50");
+        updateButton.setPrefWidth(200);
+        updateButton.setPadding(new Insets(5));
+
+        updateButton.setOnMouseEntered(e -> updateButton.setStyle(updateButton.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        updateButton.setOnMouseExited(e -> updateButton.setStyle(updateButton.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+
+        updateButton.setOnAction(event -> showUpdateForm(primaryStage));
 
         buttonSection.getChildren().add(updateButton);
-
+        buttonSection.setPadding(new Insets(0, 0, 200, 0));
         layout.setBottom(buttonSection);
-
         // Scene settings
         Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private static void showUpdateForm(BorderPane layout, VBox userInfoSection) {
+    private static void showUpdateForm(Stage ownerStage) {
         VBox updateForm = new VBox(20);
+        updateForm.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
         updateForm.setPadding(new Insets(20));
         updateForm.setAlignment(Pos.TOP_CENTER);
 
         Label updateTitle = new Label("Update Info");
-        updateTitle.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
+        updateTitle.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
 
         // Editable fields
         TextField emailField = new TextField(currentUser.getUser_email());
-        emailField.setPromptText("Enter your new email");
-        emailField.setStyle("-fx-border-radius: 10px; -fx-border-color: #C8F0FF; -fx-padding: 10px;");
+        emailField.setPromptText("Enter your new email.");
+        emailField.setStyle("-fx-border-color: #C8F0FF; -fx-border-width: 2px; -fx-padding: 10px; " +
+                "-fx-border-radius: 20px; -fx-background-radius: 20px");
+        emailField.setPrefWidth(5);
 
         TextField phoneField = new TextField(currentUser.getPhoneNb());
-        phoneField.setPromptText("Enter your new phone number");
-        phoneField.setStyle("-fx-border-radius: 10px; -fx-border-color: #C8F0FF; -fx-padding: 10px;");
+        phoneField.setPromptText("Enter your new phone number.");
+        phoneField.setStyle("-fx-border-color: #C8F0FF; -fx-border-width: 2px; -fx-padding: 10px;" +
+                "-fx-border-radius: 20px; -fx-background-radius: 20px");
+        phoneField.setPrefWidth(5);
 
         PasswordField passwordField = new PasswordField();
-        passwordField.setPromptText("Enter your new password");
-        passwordField.setStyle("-fx-border-radius: 10px; -fx-border-color: #C8F0FF; -fx-padding: 10px;");
+        passwordField.setPromptText("Enter new password or old password if it is the same.");
+        passwordField.setStyle("-fx-border-color: #C8F0FF; -fx-border-width: 2px; -fx-padding: 10px;" +
+                "-fx-border-radius: 20px; -fx-background-radius: 20px");
+        passwordField.setPrefWidth(5);
 
         Button submitButton = new Button("Save Changes");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 10px;");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
+                " -fx-border-radius: 10px; -fx-font-size: 15px;");
+        submitButton.setPrefWidth(120);
+        submitButton.setPrefHeight(35);
+
+        Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
+                " -fx-border-radius: 10px; -fx-font-size: 15px");
+        backButton.setPrefWidth(120);
+        backButton.setPrefHeight(35);
+
+        // Back to user profile
+        backButton.setOnAction(event -> {
+            ((Stage) backButton.getScene().getWindow()).close();
+            UserController userController = new UserController();
+            userController.showUserProfile(ownerStage, currentUser);
+        });
+
         submitButton.setOnAction(event -> {
             currentUser.setUser_email(emailField.getText());
             currentUser.setPhoneNb(phoneField.getText());
-            currentUser.setUser_pass(passwordField.getText());
+
+            if (passwordField.getText().isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("All fields must be filled.");
+                alert.showAndWait();
+            } else {
+                currentUser.setUser_pass(passwordField.getText());
+            }
 
             try {
-                UserService userService = new UserService();
-                userService.updateUser(currentUser);
+                if (!passwordField.getText().isEmpty()) {
+                    UserService userService = new UserService();
+                    userService.updateUser(currentUser);
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setContentText("Your information has been updated.");
-                alert.showAndWait();
+                    // Update session
+                    userSession.put("user", currentUser);
 
-                // Refresh user info section
-                layout.setCenter(userInfoSection);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setContentText("Your information has been updated.");
+                    alert.showAndWait();
+
+                    ((Stage) submitButton.getScene().getWindow()).close();
+                    UserController userController = new UserController();
+                    userController.showUserProfile(ownerStage, currentUser);
+                }
             } catch (Exception e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
@@ -203,7 +262,17 @@ public class UserController {
             }
         });
 
-        updateForm.getChildren().addAll(updateTitle, emailField, phoneField, passwordField, submitButton);
-        layout.setCenter(updateForm);
+        updateForm.getChildren().addAll(updateTitle, emailField, phoneField, passwordField, submitButton, backButton);
+
+        Scene updateScene = new Scene(updateForm, 500, 500);
+
+        Stage updateStage = new Stage();
+        updateStage.setTitle("Update Your Info");
+        updateStage.setScene(updateScene);
+        updateStage.initModality(Modality.APPLICATION_MODAL); // This makes it block other windows
+        updateStage.initOwner(ownerStage); // Owner for modality context
+        updateStage.initStyle(StageStyle.UNDECORATED);
+        updateStage.show();
     }
+
 }
