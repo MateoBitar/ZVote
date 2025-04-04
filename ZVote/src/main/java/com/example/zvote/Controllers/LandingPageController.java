@@ -156,13 +156,19 @@ public class LandingPageController {
                     Label nameLabel = new Label(candidate.getName());
                     nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
 
-                    // Progress bar for vote percentage
-                    ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
-                    voteBar.setPrefWidth(120); // Width of the progress bar
-
                     // Percentage label
                     Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
                     percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+
+
+                    // Progress bar for vote percentage
+                    ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
+                    voteBar.setPrefWidth(120); // Width of the progress bar
+                    voteBar.setProgress(candidate.getVotePercentage());
+                    // Dynamically update the percentage label whenever the progress bar changes
+                    voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
+                        percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));  // Update percentage label dynamically
+                    });
 
                     // Add the name, progress bar, and percentage label to the HBox
                     candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel);
