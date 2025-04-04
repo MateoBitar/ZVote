@@ -32,23 +32,20 @@ public class UserController {
         currentUser = user;
         userSession.put("user", user);
 
-        // Root layout
+        // Main layout
         BorderPane layout = new BorderPane();
-        layout.setStyle("-fx-background-color: #FFFFFF;");
+        layout.setStyle("-fx-background-color: transparent;");
 
-        // topBar
+        // Top Bar
         HBox topBar = new HBox(20);
-        topBar.setPadding(new Insets(10,10,10,40));
+        topBar.setPadding(new Insets(10, 10, 10, 40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
         topBar.setAlignment(Pos.CENTER);
 
-        // Create a shadow effect
         DropShadow shadow = new DropShadow();
         shadow.setRadius(5);
         shadow.setOffsetY(2);
         shadow.setColor(Color.LIGHTGRAY);
-
-        // Apply shadow to topBar
         topBar.setEffect(shadow);
 
         Label logo = new Label("ZVote");
@@ -75,62 +72,54 @@ public class UserController {
         });
 
         // Profile Button
-        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
+        Button profileIcon = new Button("\uD83D\uDC64");
         profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
         profileIcon.setPrefHeight(30);
         profileIcon.setPrefWidth(70);
         profileIcon.setTranslateX(150);
 
-        Label menuIcon = new Label("\u283F"); // Unicode for ☰ (menu icon)
+        Label menuIcon = new Label("\u283F");
         menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
         menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
 
         menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
-
         HBox.setHgrow(menu, Priority.ALWAYS);
-        topBar.getChildren().addAll(logo, menu);
 
+        topBar.getChildren().addAll(logo, menu);
         layout.setTop(topBar);
 
-        // User Info Section
+        // Center content
         VBox userInfoSection = new VBox(20);
         userInfoSection.setPadding(new Insets(20));
         userInfoSection.setAlignment(Pos.TOP_CENTER);
 
-        // User Info Section
         VBox userContentSection = new VBox();
         userContentSection.setPadding(new Insets(20));
         userContentSection.setAlignment(Pos.CENTER_LEFT);
 
-        // Title
         Label title = new Label("User Profile");
         title.setStyle("-fx-font-size: 50px; -fx-font-weight: BOLD; -fx-text-fill: #333333;");
         BorderPane.setAlignment(title, Pos.CENTER);
         BorderPane.setMargin(title, new Insets(20, 0, 20, 0));
 
-        // Username
         Label usernameLabel = new Label("Username: " + user.getUsername());
         usernameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #555555;");
 
-        // Email
         Label emailLabel = new Label("Email: " + user.getUser_email());
         emailLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
 
-        // Phone Number
         Label phoneLabel = new Label("Phone Number: " + user.getPhoneNb());
         phoneLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
 
-        // Role
         Label roleLabel = new Label("Role: " + user.getRole());
         roleLabel.setStyle("-fx-font-size: 20px; -fx-text-fill: #555555;");
 
         userContentSection.getChildren().addAll(usernameLabel, emailLabel, phoneLabel, roleLabel);
-        userContentSection.setPadding(new Insets(20, 0,0,720));
+        userContentSection.setPadding(new Insets(20, 0, 0, 720));
         userContentSection.setSpacing(10);
 
-        // Photo
         ImageView photoView = new ImageView();
         photoView.setFitWidth(200);
         photoView.setFitHeight(200);
@@ -138,49 +127,53 @@ public class UserController {
         if (user.getUser_photoID() != null && user.getUser_photoID().length > 0) {
             photoView.setImage(new Image(new ByteArrayInputStream(user.getUser_photoID())));
         } else {
-            // Fallback to default image
-            photoView.setImage(new Image("/images/default-profile.png")); // Replace with actual default path
+            photoView.setImage(new Image("/images/default-profile.png"));
         }
 
-        // Add user info to section
         userInfoSection.getChildren().addAll(title, photoView, userContentSection);
         userInfoSection.setPadding(new Insets(100, 0, 0, 0));
         layout.setCenter(userInfoSection);
 
-        // Buttons Section
+        // Bottom buttons
         HBox buttonSection = new HBox(20);
-        buttonSection.setPadding(new Insets(0, 0 , 40, 0));
+        buttonSection.setPadding(new Insets(0, 0, 40, 0));
         buttonSection.setAlignment(Pos.CENTER);
 
-        // Update Info Button
         Button updateButton = new Button("Update Info");
         updateButton.setStyle("-fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 50");
         updateButton.setPrefWidth(200);
         updateButton.setPadding(new Insets(5));
-
         updateButton.setOnMouseEntered(e -> updateButton.setStyle(updateButton.getStyle().replace(
                 "-fx-text-fill: black;", "-fx-text-fill: white;")));
         updateButton.setOnMouseExited(e -> updateButton.setStyle(updateButton.getStyle().replace(
                 "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
-
         updateButton.setOnAction(event -> showUpdateForm(primaryStage));
-
         buttonSection.getChildren().add(updateButton);
         buttonSection.setPadding(new Insets(0, 0, 200, 0));
         layout.setBottom(buttonSection);
-        // Scene settings
-        Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
+
+        // Background Image
+        ImageView backgroundImageView = new ImageView(new Image(getClass().getResource("/images/UserProfile.jpg").toExternalForm()));
+        backgroundImageView.setPreserveRatio(false);
+        backgroundImageView.setFitWidth(Screen.getPrimary().getBounds().getWidth());
+        backgroundImageView.setFitHeight(Screen.getPrimary().getBounds().getHeight() - 80);
+
+        StackPane root = new StackPane();
+        root.getChildren().addAll(backgroundImageView, layout);
+
+        Scene scene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 
     private static void showUpdateForm(Stage ownerStage) {
         VBox updateForm = new VBox(20);
         updateForm.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
         updateForm.setPadding(new Insets(20));
-        updateForm.setAlignment(Pos.TOP_CENTER);
+        updateForm.setAlignment(Pos.CENTER);
 
         Label updateTitle = new Label("Update Info");
         updateTitle.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
@@ -208,7 +201,7 @@ public class UserController {
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
                 " -fx-border-radius: 10px; -fx-font-size: 15px;");
         submitButton.setPrefWidth(120);
-        submitButton.setPrefHeight(35);
+        submitButton.setPrefHeight(38);
 
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
@@ -271,7 +264,7 @@ public class UserController {
         updateStage.setScene(updateScene);
         updateStage.initModality(Modality.APPLICATION_MODAL); // This makes it block other windows
         updateStage.initOwner(ownerStage); // Owner for modality context
-        updateStage.initStyle(StageStyle.UNDECORATED);
+        updateStage.setResizable(false);
         updateStage.show();
     }
 
