@@ -3,8 +3,8 @@ package com.example.zvote.Controllers;
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
 import com.example.zvote.Models.UserModel;
-import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.PollService;
+import com.example.zvote.Services.ResultService;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -174,8 +174,8 @@ public class AdminLandingPageController {
 
 
                 // Fetch candidates for the poll
-                CandidateService candidateService = new CandidateService();
-                List<CandidateModel> candidates = candidateService.getCandidatesByPollID(poll.getPoll_ID());
+                ResultService resultService = new ResultService();
+                List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
 
                 // Create a VBox to hold candidate names
                 VBox candidatesBox = new VBox(5); // 5px spacing between candidate names
@@ -205,8 +205,8 @@ public class AdminLandingPageController {
 
                     // Progress bar for vote percentage
                     ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
-                    voteBar.setPrefWidth(120); // Width of the progress bar
-                    voteBar.setProgress(candidate.getVotePercentage());
+                    voteBar.setPrefWidth(80); // Width of the progress bar
+
                     // Dynamically update the percentage label whenever the progress bar changes
                     voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
                         percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));  // Update percentage label dynamically

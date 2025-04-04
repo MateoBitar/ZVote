@@ -122,7 +122,7 @@ public class ResultService {
 
     public static double getVotePercentage(int candidateVotes, int totalVotes) {
         if (totalVotes == 0) return 0.0;
-        return ((double) candidateVotes / totalVotes) * 100;
+        return ((double) candidateVotes / totalVotes);
     }
 
     public List<CandidateModel> getCandidatesWithVotesByPollID(int poll_ID) throws SQLException {
