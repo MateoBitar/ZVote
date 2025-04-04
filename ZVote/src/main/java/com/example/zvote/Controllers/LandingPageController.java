@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
@@ -29,6 +30,7 @@ public class LandingPageController {
     public void showLandingPage(Stage primaryStage,Map<String, Object> userSession) throws Exception {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
+
         // topBar
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(10,10,10,40));
@@ -127,6 +129,7 @@ public class LandingPageController {
                 pollLabel.setAlignment(Pos.CENTER);
                 pollLabel.setWrapText(true);
                 pollLabel.setMaxWidth(250);
+                pollLabel.setPadding(new Insets(0,0,0,10));
 
                 // Fetch candidates for the poll
                 CandidateService candidateService = new CandidateService();
@@ -146,9 +149,26 @@ public class LandingPageController {
                 candidatesBox.getChildren().add(candidatesLabel);
 
                 for (CandidateModel candidate : candidates) {
-                    Label candidateLabel = new Label(candidate.getName());
-                    candidateLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
-                    candidatesBox.getChildren().add(candidateLabel);
+                    HBox candidateBox = new HBox(10);  // Spacing between elements
+                    candidateBox.setAlignment(Pos.CENTER_LEFT);  // Align everything to the left
+
+                    // Candidate name label
+                    Label nameLabel = new Label(candidate.getName());
+                    nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+
+                    // Progress bar for vote percentage
+                    ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
+                    voteBar.setPrefWidth(120); // Width of the progress bar
+
+                    // Percentage label
+                    Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
+                    percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+
+                    // Add the name, progress bar, and percentage label to the HBox
+                    candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel);
+
+                    // Add the candidate box to the candidates container
+                    candidatesBox.getChildren().add(candidateBox);
                 }
 
                 // Add space between title and button

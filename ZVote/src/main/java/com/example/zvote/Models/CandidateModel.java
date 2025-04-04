@@ -12,6 +12,9 @@ public class CandidateModel {
     private byte[] photo;
     private String bio;
     private int poll_ID;
+    private int voteCount;
+    private double votePercentage;
+
 
     public CandidateModel(String name, byte[] photo, String bio, int poll_ID) {
         setName(name);
@@ -79,6 +82,22 @@ public class CandidateModel {
         this.poll_ID = poll_ID;
     }
 
+    public int getVoteCount() {
+        return voteCount;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public double getVotePercentage() {
+        return votePercentage;
+    }
+
+    public void setVotePercentage(double votePercentage) {
+        this.votePercentage = votePercentage;
+    }
+
     @Override
     public String toString() {
         return "candidate_Id = " + candidate_ID +
@@ -87,4 +106,5 @@ public class CandidateModel {
                 ", bio = " + bio +
                 ", poll_ID = " + poll_ID;
     }
+
 }

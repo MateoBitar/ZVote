@@ -106,6 +106,49 @@ public class ResultService {
         }
     }
 
+    public int getTotalVotesForPoll(int poll_ID) throws SQLException {
+        int totalVotes = 0;
+        String query = "SELECT SUM(votes_casted) AS totalVotes FROM result WHERE poll_ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, poll_ID);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    totalVotes = rs.getInt("totalVotes");
+                }
+            }
+        }
+        return totalVotes;
+    }
+
+    public static double getVotePercentage(int candidateVotes, int totalVotes) {
+        if (totalVotes == 0) return 0.0;
+        return ((double) candidateVotes / totalVotes) * 100;
+    }
+
+    public List<CandidateModel> getCandidatesWithVotesByPollID(int poll_ID) throws SQLException {
+        List<CandidateModel> candidates = new ArrayList<>();
+        String query = "SELECT c.*, r.votes_casted FROM candidates c " +
+                "JOIN result r ON c.candidate_ID = r.candidate_ID " +
+                "WHERE r.poll_ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, poll_ID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    CandidateModel candidate = CandidateMapper.mapResultSetToCandidate(resultSet);
+                    candidate.setVoteCount(resultSet.getInt("votes_casted")); // Set the vote count
+
+                    int totalVotes = getTotalVotesForPoll(poll_ID); // Assume this method gets the total votes for a poll
+
+                    double percentage = getVotePercentage(candidate.getVoteCount(), totalVotes);
+                    candidate.setVotePercentage(percentage); // Assuming you have a setVotePercentage method in CandidateModel
+
+                    candidates.add(candidate);
+                }
+            }
+        }
+        return candidates;
+    }
+
     // Fetch winner of a poll
     public CandidateModel getWinnerByPollID(int poll_ID) throws SQLException {
         String query = "SELECT c.* FROM candidates c " +
