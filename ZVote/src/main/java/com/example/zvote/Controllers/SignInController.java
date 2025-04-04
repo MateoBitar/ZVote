@@ -271,9 +271,14 @@ public class SignInController {
                             // Close the sign-in stage and navigate to the Landing Page
                             signInStage.close();
 
-                            // Pass the primaryStage and userSession to the LandingPageController
-                            LandingPageController main = new LandingPageController();
-                            main.showLandingPage(primaryStage, userSession);
+                            if(user.getRole().equals("admin")){
+                                AdminLandingPageController main = new AdminLandingPageController();
+                                main.showAdminLandingPage(primaryStage, userSession);
+                            } else {
+                                // Pass the primaryStage and userSession to the LandingPageController
+                                LandingPageController main = new LandingPageController();
+                                main.showLandingPage(primaryStage, userSession);
+                            }
 
                         } catch (Exception e) {
                             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while transitioning to the landing page.");

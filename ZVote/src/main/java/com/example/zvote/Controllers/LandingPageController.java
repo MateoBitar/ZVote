@@ -23,6 +23,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +136,28 @@ public class LandingPageController {
                 pollLabel.setMaxWidth(250);
                 pollLabel.setPadding(new Insets(0,0,0,10));
 
+                // Poll status
+                Label statusLabel = new Label();
+                statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
+
+                Timestamp endDate = (Timestamp) poll.getEnd_date(); // java.sql.Timestamp
+                LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                LocalDate today = LocalDate.now();
+                long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
+
+                // Set status text based on time
+                if (daysLeft > 0) {
+                    statusLabel.setText("Status: Active • " + daysLeft + " day(s) left");
+                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Green;");
+                } else if (daysLeft == 0) {
+                    statusLabel.setText("Status: Last day to vote!");
+                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Orange;");
+                } else {
+                    statusLabel.setText("Status: Completed");
+                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
+                }
+
                 // Fetch candidates for the poll
                 CandidateService candidateService = new CandidateService();
                 List<CandidateModel> candidates = candidateService.getCandidatesByPollID(poll.getPoll_ID());
@@ -195,7 +222,7 @@ public class LandingPageController {
                 );
                 viewPollButton.setPrefHeight(30);
 
-                pollCard.getChildren().addAll(pollLabel, candidatesBox, spacer, viewPollButton);
+                pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, viewPollButton);
 
                 // Hover effect for moving the card up
                 pollCard.setOnMouseEntered(e -> {
