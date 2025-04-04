@@ -6,35 +6,102 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.zvote.Controllers.LandingPageController.animateMenu;
 
 public class UserController {
     private static UserModel currentUser; // Holds the logged-in user info
+    public static Map<String, Object> userSession = new HashMap<>();
 
     public void showUserProfile(Stage primaryStage, UserModel user) {
         currentUser = user;
+        userSession.put("user", user);
 
         // Root layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF;");
 
-        // Title
-        Label title = new Label("User Profile");
-        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #333333;");
-        BorderPane.setAlignment(title, Pos.CENTER);
-        layout.setTop(title);
-        BorderPane.setMargin(title, new Insets(20, 0, 20, 0));
+        // topBar
+        HBox topBar = new HBox(20);
+        topBar.setPadding(new Insets(10,10,10,40));
+        topBar.setStyle("-fx-background-color: #C8F0FF;");
+        topBar.setAlignment(Pos.CENTER);
+
+        // Create a shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(5);
+        shadow.setOffsetY(2);
+        shadow.setColor(Color.LIGHTGRAY);
+
+        // Apply shadow to topBar
+        topBar.setEffect(shadow);
+
+        Label logo = new Label("ZVote");
+        logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
+
+        HBox menu = new HBox(-10);
+
+        // Polls Button
+        Button pollIcon = new Button("\uD83D\uDCCB");
+        pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
+        pollIcon.setPrefHeight(30);
+        pollIcon.setPrefWidth(70);
+        pollIcon.setTranslateX(150);
+        pollIcon.setOnMouseEntered(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        pollIcon.setOnMouseExited(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        pollIcon.setOnAction(e -> {
+            LandingPageController main = new LandingPageController();
+            try {
+                main.showLandingPage(primaryStage, userSession);
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        // Profile Button
+        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
+        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
+        profileIcon.setPrefHeight(30);
+        profileIcon.setPrefWidth(70);
+        profileIcon.setTranslateX(150);
+
+        Label menuIcon = new Label("\u283F"); // Unicode for ☰ (menu icon)
+        menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
+        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
+
+        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
+        menu.setAlignment(Pos.CENTER_RIGHT);
+
+        HBox.setHgrow(menu, Priority.ALWAYS);
+        topBar.getChildren().addAll(logo, menu);
+
+        layout.setTop(topBar);
 
         // User Info Section
         VBox userInfoSection = new VBox(20);
         userInfoSection.setPadding(new Insets(20));
         userInfoSection.setAlignment(Pos.TOP_CENTER);
+
+        // Title
+        Label title = new Label("User Profile");
+        title.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #333333;");
+        BorderPane.setAlignment(title, Pos.CENTER);
+        BorderPane.setMargin(title, new Insets(20, 0, 20, 0));
 
         // Username
         Label usernameLabel = new Label("Username: " + user.getUsername());
@@ -65,7 +132,7 @@ public class UserController {
         }
 
         // Add user info to section
-        userInfoSection.getChildren().addAll(photoView, usernameLabel, emailLabel, phoneLabel, roleLabel);
+        userInfoSection.getChildren().addAll(title, photoView, usernameLabel, emailLabel, phoneLabel, roleLabel);
 
         layout.setCenter(userInfoSection);
 
@@ -84,7 +151,7 @@ public class UserController {
         layout.setBottom(buttonSection);
 
         // Scene settings
-        Scene scene = new Scene(layout, 600, 700);
+        Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

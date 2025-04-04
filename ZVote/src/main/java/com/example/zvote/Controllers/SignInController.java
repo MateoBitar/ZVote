@@ -224,7 +224,8 @@ public class SignInController {
                 uploadPhotoButton.setText("Upload Photo ID");
 
                 signInStage.close();
-                LandingPageController.showLandingPage(primaryStage, userSession);
+                LandingPageController main = new LandingPageController();
+                main.showLandingPage(primaryStage, userSession);
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while processing your request.");
                 e.printStackTrace();
@@ -271,7 +272,8 @@ public class SignInController {
                             signInStage.close();
 
                             // Pass the primaryStage and userSession to the LandingPageController
-                            LandingPageController.showLandingPage(primaryStage, userSession);
+                            LandingPageController main = new LandingPageController();
+                            main.showLandingPage(primaryStage, userSession);
 
                         } catch (Exception e) {
                             showAlert(Alert.AlertType.ERROR, "Error", "An error occurred while transitioning to the landing page.");

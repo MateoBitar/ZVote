@@ -12,7 +12,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
@@ -24,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class LandingPageController {
-    public static void showLandingPage(Stage primaryStage,Map<String, Object> userSession) throws Exception {
+    public void showLandingPage(Stage primaryStage,Map<String, Object> userSession) throws Exception {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
         // topBar
@@ -33,6 +35,15 @@ public class LandingPageController {
         topBar.setStyle("-fx-background-color: #C8F0FF;");
         topBar.setAlignment(Pos.CENTER);
 
+        // Create a shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(5);
+        shadow.setOffsetY(2);
+        shadow.setColor(Color.LIGHTGRAY);
+
+        // Apply shadow to topBar
+        topBar.setEffect(shadow);
+
         Label logo = new Label("ZVote");
         logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
 
@@ -40,13 +51,11 @@ public class LandingPageController {
 
         // Polls Button
         Button pollIcon = new Button("\uD83D\uDCCB");
-        pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+        pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
         pollIcon.setPrefHeight(30);
         pollIcon.setPrefWidth(70);
         pollIcon.setTranslateX(150);
-        pollIcon.setOnMouseEntered(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        pollIcon.setOnMouseExited(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         // Profile Button
         Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
@@ -193,7 +202,7 @@ public class LandingPageController {
 
     private static boolean isMenuOpen = false;
 
-    private static void animateMenu(Button poll, Button profile) {
+    static void animateMenu(Button poll, Button profile) {
         isMenuOpen = !isMenuOpen; // Toggle state
         double targetX = isMenuOpen ? 0 : 150; // Move in or out
         animateItem(poll, targetX);
