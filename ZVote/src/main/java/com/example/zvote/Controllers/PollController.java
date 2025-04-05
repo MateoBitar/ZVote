@@ -20,6 +20,7 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -249,15 +250,32 @@ public class PollController {
             RadioButton selectedCandidate = (RadioButton) candidatesGroup.getSelectedToggle();
             if (selectedCandidate == null) {
                 try {
-                    VoteModel vote = new VoteModel(user.getUser_ID(), poll.getPoll_ID(), 1, 0);
-                    new VoteService().addVote(vote);
+                    VoteModel abstainVote = new VoteModel(user.getUser_ID(), poll.getPoll_ID(), 1, 0);
+                    new VoteService().addVote(abstainVote);
 
                     poll.setNbOfVotes(poll.getNbOfVotes() + 1);
                     poll.setNbOfAbstentions(poll.getNbOfAbstentions() + 1);
                     new PollService().updatePoll(poll);
 
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Vote Submitted");
+                    alert.setContentText("Your abstention vote has been successfully recorded.");
+                    alert.showAndWait();
+
+                    UserController.userSession.put("user", user);
+                    // Navigate back to landing page
+                    LandingPageController landingPageController = new LandingPageController();
+                    landingPageController.showLandingPage(primaryStage, UserController.userSession);
+
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    if (e.getMessage().contains("User has already voted")) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Duplicate Vote");
+                        alert.setContentText("You have already voted in this poll. Multiple votes are not allowed.");
+                        alert.showAndWait();
+                    } else {
+                        throw new RuntimeException(e); // Handle other unexpected exceptions
+                    }
                 }
             } else {
                 try {

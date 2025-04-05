@@ -28,13 +28,16 @@ public class VoteService {
             }
         }
 
-        String query = "INSERT INTO votes (user_ID, poll_ID, blank, candidate_ID)" +
-                "VALUES(?, ?, ?, ?)";
+        String query = "INSERT INTO votes (user_ID, poll_ID, blank, candidate_ID) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, vote.getUser_ID());
             statement.setInt(2, vote.getPoll_ID());
             statement.setInt(3, vote.getBlank());
-            statement.setInt(4, vote.getCandidate_ID());
+            if (vote.getCandidate_ID() == 0) {
+                statement.setNull(4, java.sql.Types.INTEGER); // Set candidate_ID as NULL for abstention votes
+            } else {
+                statement.setInt(4, vote.getCandidate_ID()); // Set candidate_ID for normal votes
+            }
             statement.executeUpdate();
         }
     }
