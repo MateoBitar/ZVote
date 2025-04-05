@@ -2,6 +2,7 @@ package com.example.zvote.Controllers;
 
 import com.example.zvote.Models.*;
 import com.example.zvote.Services.CandidateService;
+import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
 import com.example.zvote.Services.VoteService;
 import javafx.geometry.Insets;
@@ -155,6 +156,10 @@ public class PollController {
         if (daysLeft >= 0) { // Poll is active
             if (!hasVoted) { // User didn't vote
                 pollInfoSection.getChildren().add(voteButton);
+            } else {
+                Label votedLabel = new Label("You Voted Already!");
+                votedLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
+                pollInfoSection.getChildren().add(votedLabel);
             }
         } else { // Poll is closed
             pollInfoSection.getChildren().add(winnerLabel);
@@ -237,13 +242,13 @@ public class PollController {
             RadioButton selectedCandidate = (RadioButton) candidatesGroup.getSelectedToggle();
             if (selectedCandidate == null) {
                 try {
-                    VoteService voteService = new VoteService();
                     VoteModel vote = new VoteModel(user.getUser_ID(), poll.getPoll_ID(), 1, 0);
-
-                    voteService.addVote(vote);
+                    new VoteService().addVote(vote);
 
                     poll.setNbOfVotes(poll.getNbOfVotes() + 1);
                     poll.setNbOfAbstentions(poll.getNbOfAbstentions() + 1);
+                    new PollService().updatePoll(poll);
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -266,22 +271,24 @@ public class PollController {
                         alert.setTitle("Failed to submit vote");
                         alert.setContentText("No result object found for this poll and candidate!");
                         alert.showAndWait();
+                    } else {
+                        result.setVotes_casted(result.getVotes_casted() + 1);
+                        resultService.updateResult(result);
+
+                        poll.setNbOfVotes(poll.getNbOfVotes() + 1);
+                        new PollService().updatePoll(poll);
+
+                        // Success alert
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Success");
+                        alert.setContentText("Your vote has been submitted successfully!");
+                        alert.showAndWait();
+
+                        UserController.userSession.put("user", user);
+                        // Navigate back to landing page
+                        LandingPageController landingPageController = new LandingPageController();
+                        landingPageController.showLandingPage(primaryStage, UserController.userSession);
                     }
-                    result.setVotes_casted(result.getVotes_casted() + 1);
-                    resultService.updateResult(result);
-
-                    poll.setNbOfVotes(poll.getNbOfVotes() + 1);
-
-                    // Success alert
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Success");
-                    alert.setContentText("Your vote has been submitted successfully!");
-                    alert.showAndWait();
-
-                    UserController.userSession.put("user", user);
-                    // Navigate back to landing page
-                    LandingPageController landingPageController = new LandingPageController();
-                    landingPageController.showLandingPage(primaryStage, UserController.userSession);
                 } catch (Exception e) {
                     // Error alert for vote submission failure
                     Alert alert = new Alert(Alert.AlertType.ERROR);

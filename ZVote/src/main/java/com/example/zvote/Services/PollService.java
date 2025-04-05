@@ -67,13 +67,16 @@ public class PollService {
 
     // Update a poll
     public void updatePoll(PollModel poll) throws SQLException {
-        String query = "UPDATE polls SET title = ?, description = ?, start_date = ?, end_date = ? WHERE poll_ID = ?";
+        String query = "UPDATE polls SET title = ?, description = ?, start_date = ?, end_date = ?, nbOfVotes = ?," +
+                "nbOfAbstentions = ? WHERE poll_ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, poll.getTitle());
             statement.setString(2, poll.getDescription());
             statement.setTimestamp(3, new Timestamp(poll.getStart_date().getTime()));
             statement.setTimestamp(4, new Timestamp(poll.getEnd_date().getTime()));
-            statement.setInt(5, poll.getPoll_ID());
+            statement.setInt(5, poll.getNbOfVotes());
+            statement.setInt(6, poll.getNbOfAbstentions());
+            statement.setInt(7, poll.getPoll_ID());
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new IllegalArgumentException("Poll not found.");

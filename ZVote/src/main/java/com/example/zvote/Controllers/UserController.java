@@ -127,7 +127,7 @@ public class UserController {
         if (user.getUser_photoID() != null && user.getUser_photoID().length > 0) {
             photoView.setImage(new Image(new ByteArrayInputStream(user.getUser_photoID())));
         } else {
-            photoView.setImage(new Image("/images/default-profile.png"));
+            photoView.setImage(new Image(getClass().getResource("/images/Profile Pic.png").toExternalForm()));
         }
 
         userInfoSection.getChildren().addAll(title, photoView, userContentSection);
