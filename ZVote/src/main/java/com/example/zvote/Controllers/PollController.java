@@ -306,7 +306,7 @@ public class PollController {
 
         // Add components to voting layout
         votingLayout.getChildren().addAll(topBar, candidateLabel, candidatesSection, submitButton);
-
+        votingLayout.setStyle("-fx-background-color: White");
         // Scene setup
         Scene scene = new Scene(votingLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);

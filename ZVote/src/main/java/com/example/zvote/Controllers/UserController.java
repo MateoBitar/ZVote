@@ -155,7 +155,7 @@ public class UserController {
         layout.setBottom(buttonSection);
 
         // Background Image
-        ImageView backgroundImageView = new ImageView(new Image(getClass().getResource("/images/UserProfile.jpg").toExternalForm()));
+        ImageView backgroundImageView = new ImageView(new Image(getClass().getResource("/images/UserProfile.png").toExternalForm()));
         backgroundImageView.setPreserveRatio(false);
         backgroundImageView.setFitWidth(Screen.getPrimary().getBounds().getWidth());
         backgroundImageView.setFitHeight(Screen.getPrimary().getBounds().getHeight() - 80);
