@@ -3,7 +3,6 @@ package com.example.zvote.Controllers;
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
 import com.example.zvote.Models.UserModel;
-import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
 import javafx.animation.TranslateTransition;
@@ -22,13 +21,11 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -95,15 +92,17 @@ public class LandingPageController {
         pollGrid.setHgap(30);
         pollGrid.setVgap(30);
         pollGrid.setAlignment(Pos.CENTER);
+        pollGrid.setPadding(new Insets(40, 0, 0,200));
 
 
         // Wrap the pollGrid in a ScrollPane
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(pollGrid);
-        scrollPane.setFitToWidth(true);  // Ensures the scroll pane expands to the full width
-        scrollPane.setFitToHeight(true); // Ensures the scroll pane expands to the full height
+        scrollPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() - topBar.getHeight());
+        scrollPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
         scrollPane.setStyle("-fx-background-color: transparent;");
-
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         PollService pollService = new PollService();
         try {
@@ -242,7 +241,7 @@ public class LandingPageController {
                 pollGrid.add(pollCard, (polls.indexOf(poll) % 4), (polls.indexOf(poll) / 4)); // Dynamic positioning
             }
 
-            layout.setCenter(pollGrid);
+            layout.setCenter(scrollPane);
 
             // Scene and Stage
             Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);

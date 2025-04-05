@@ -24,7 +24,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -91,8 +90,9 @@ public class AdminLandingPageController {
 
         layout.setTop(topBar);
 
-        VBox content = new VBox(15);
+        VBox content = new VBox(10);
         content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(5, 0, 0, 0));
 
         ImageView imageViewButton = new ImageView(new Image(getClass().getResource("/images/Plus Sign.png").toExternalForm()));
         imageViewButton.setFitHeight(30);
@@ -100,7 +100,7 @@ public class AdminLandingPageController {
 
         Button addPollButton = new Button("Add Poll");
         addPollButton.setGraphic(imageViewButton);
-        addPollButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
+        addPollButton.setStyle("-fx-background-color: transparent; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
                 "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
 
         // Poll Cards
@@ -108,15 +108,16 @@ public class AdminLandingPageController {
         pollGrid.setHgap(30);
         pollGrid.setVgap(30);
         pollGrid.setAlignment(Pos.CENTER);
-
-        addPollButton.setPrefWidth(pollGrid.getPrefWidth());
+        pollGrid.setPadding(new Insets(10, 0, 0,0));
 
         // Wrap the pollGrid in a ScrollPane
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(pollGrid);
-        scrollPane.setFitToWidth(true);  // Ensures the scroll pane expands to the full width
-        scrollPane.setFitToHeight(true); // Ensures the scroll pane expands to the full height
+        scrollPane.setContent(content);
+        scrollPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() - (topBar.getHeight() + addPollButton.getHeight()));
+        scrollPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() - 50);
         scrollPane.setStyle("-fx-background-color: transparent;");
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
         PollService pollService = new PollService();
         try {
@@ -256,9 +257,9 @@ public class AdminLandingPageController {
                 pollGrid.add(pollCard, (polls.indexOf(poll) % 4), (polls.indexOf(poll) / 4)); // Dynamic positioning
             }
 
-            content.setPrefWidth(pollGrid.getWidth());
+            content.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
             content.getChildren().addAll(addPollButton, pollGrid);
-            layout.setCenter(content);
+            layout.setCenter(scrollPane);
 
             // Scene and Stage
             Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
