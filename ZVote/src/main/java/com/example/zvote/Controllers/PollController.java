@@ -155,8 +155,8 @@ public class PollController {
         boolean hasVoted = voteService.hasUserVoted(user.getUser_ID(), poll.getPoll_ID());
 
         if (today.isBefore(startLocalDate)) {
-            Label inactiveLabel = new Label("Voting starts on • " + startLocalDate);
-            inactiveLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Gray;");
+            Label inactiveLabel = new Label("Voting Starts On • " + startLocalDate);
+            inactiveLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Black;");
             pollInfoSection.getChildren().add(inactiveLabel);
         } else if (daysLeft >= 0) { // Poll is active
             if (!hasVoted) { // User didn't vote
