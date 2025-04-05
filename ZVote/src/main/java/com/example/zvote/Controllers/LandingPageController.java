@@ -1,5 +1,6 @@
 package com.example.zvote.Controllers;
 
+import com.example.zvote.Main;
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
 import com.example.zvote.Models.UserModel;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 public class LandingPageController {
     public void showLandingPage(Stage primaryStage,Map<String, Object> userSession) throws Exception {
+        // Main layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
 
@@ -56,27 +58,46 @@ public class LandingPageController {
         pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
         pollIcon.setPrefHeight(30);
-        pollIcon.setPrefWidth(70);
+        pollIcon.setPrefWidth(60);
         pollIcon.setTranslateX(150);
 
-        // Profile Button
-        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
-        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+        // Profile Menu Button
+        MenuButton profileMenu = new MenuButton("\uD83D\uDC64"); // Unicode for user icon
+        profileMenu.setStyle("-fx-font-family: Arial; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
-        profileIcon.setPrefHeight(30);
-        profileIcon.setPrefWidth(70);
-        profileIcon.setTranslateX(150);
-        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
-        profileIcon.setOnAction(e -> {
-                UserController userController = new UserController();
-                userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
-        });
-        Label menuIcon = new Label("\u283F"); // Unicode for ☰ (menu icon)
-        menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
-        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
+        profileMenu.setPrefHeight(30);
+        profileMenu.setPrefWidth(75);
+        profileMenu.setTranslateX(200);
+        profileMenu.setOnMouseEntered(e -> profileMenu.setStyle(profileMenu.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileMenu.setOnMouseExited(e -> profileMenu.setStyle(profileMenu.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
 
-        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
+        // Menu Items
+        MenuItem userInfoItem = new MenuItem("User Info");
+        userInfoItem.setOnAction(e -> {
+            UserController userController = new UserController();
+            userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
+        });
+
+        MenuItem logoutItem = new MenuItem("Log Out");
+        logoutItem.setOnAction(e -> {
+            primaryStage.close();
+            new Main().start(new Stage());
+        });
+
+        MenuItem logoffItem = new MenuItem("Close Application");
+        logoffItem.setOnAction(e -> {
+            primaryStage.close();
+        });
+
+        profileMenu.getItems().addAll(userInfoItem, logoutItem, logoffItem);
+
+        Label menuIcon = new Label("\u283F");
+        menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
+        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileMenu));
+
+        menu.getChildren().addAll(pollIcon, profileMenu, menuIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
 
         HBox.setHgrow(menu, Priority.ALWAYS);
@@ -282,14 +303,20 @@ public class LandingPageController {
 
     private static boolean isMenuOpen = false;
 
-    static void animateMenu(Button poll, Button profile) {
+    static void animateMenu(Button poll, MenuButton profile) {
         isMenuOpen = !isMenuOpen; // Toggle state
-        double targetX = isMenuOpen ? 0 : 150; // Move in or out
+        double targetX = isMenuOpen ? 0 : 200; // Move in or out
         animateItem(poll, targetX);
         animateItem(profile, targetX);
     }
 
     private static void animateItem(Button item, double targetX) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);
+        transition.setToX(targetX);
+        transition.play();
+    }
+
+    private static void animateItem(MenuButton item, double targetX) {
         TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);
         transition.setToX(targetX);
         transition.play();

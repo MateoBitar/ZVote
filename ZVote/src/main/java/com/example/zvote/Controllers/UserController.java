@@ -1,5 +1,6 @@
 package com.example.zvote.Controllers;
 
+import com.example.zvote.Main;
 import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.UserService;
 import javafx.geometry.Insets;
@@ -34,18 +35,21 @@ public class UserController {
 
         // Main layout
         BorderPane layout = new BorderPane();
-        layout.setStyle("-fx-background-color: transparent;");
+        layout.setStyle("-fx-background-color: #FFFFFF");
 
-        // Top Bar
+        // topBar
         HBox topBar = new HBox(20);
-        topBar.setPadding(new Insets(10, 10, 10, 40));
+        topBar.setPadding(new Insets(10,10,10,40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
         topBar.setAlignment(Pos.CENTER);
 
+        // Create a shadow effect
         DropShadow shadow = new DropShadow();
         shadow.setRadius(5);
         shadow.setOffsetY(2);
         shadow.setColor(Color.LIGHTGRAY);
+
+        // Apply shadow to topBar
         topBar.setEffect(shadow);
 
         Label logo = new Label("ZVote");
@@ -58,36 +62,58 @@ public class UserController {
         pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
         pollIcon.setPrefHeight(30);
-        pollIcon.setPrefWidth(70);
+        pollIcon.setPrefWidth(60);
         pollIcon.setTranslateX(150);
-        pollIcon.setOnMouseEntered(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        pollIcon.setOnMouseExited(e -> pollIcon.setStyle(pollIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        pollIcon.setOnMouseEntered(e -> pollIcon.setStyle(pollIcon.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        pollIcon.setOnMouseExited(e -> pollIcon.setStyle(pollIcon.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
         pollIcon.setOnAction(e -> {
-            LandingPageController main = new LandingPageController();
             try {
-                main.showLandingPage(primaryStage, userSession);
+                new LandingPageController().showLandingPage(primaryStage, userSession);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
         });
 
-        // Profile Button
-        Button profileIcon = new Button("\uD83D\uDC64");
-        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
+        // Profile Menu Button
+        MenuButton profileMenu = new MenuButton("\uD83D\uDC64"); // Unicode for user icon
+        profileMenu.setStyle("-fx-font-family: Arial; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
-        profileIcon.setPrefHeight(30);
-        profileIcon.setPrefWidth(70);
-        profileIcon.setTranslateX(150);
+        profileMenu.setPrefHeight(30);
+        profileMenu.setPrefWidth(75);
+        profileMenu.setTranslateX(200);
+
+        // Menu Items
+        MenuItem updateInfoItem = new MenuItem("Update Info");
+        updateInfoItem.setOnAction(e -> {
+            UserController userController = new UserController();
+            userController.showUpdateForm(primaryStage);
+        });
+
+        MenuItem logoutItem = new MenuItem("Log Out");
+        logoutItem.setOnAction(e -> {
+            primaryStage.close();
+            new Main().start(new Stage());
+        });
+
+        MenuItem logoffItem = new MenuItem("Close Application");
+        logoffItem.setOnAction(e -> {
+            primaryStage.close();
+        });
+
+        profileMenu.getItems().addAll(updateInfoItem, logoutItem, logoffItem);
 
         Label menuIcon = new Label("\u283F");
         menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
-        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
+        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileMenu));
 
-        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
+        menu.getChildren().addAll(pollIcon, profileMenu, menuIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
-        HBox.setHgrow(menu, Priority.ALWAYS);
 
+        HBox.setHgrow(menu, Priority.ALWAYS);
         topBar.getChildren().addAll(logo, menu);
+
         layout.setTop(topBar);
 
         // Center content
@@ -160,9 +186,17 @@ public class UserController {
         backgroundImageView.setFitWidth(Screen.getPrimary().getBounds().getWidth());
         backgroundImageView.setFitHeight(Screen.getPrimary().getBounds().getHeight() - 80);
 
+        // Ensure the layout does not hide the background
+        layout.setStyle("-fx-background-color: transparent;");
+
+        // Create a StackPane and ensure proper layering
         StackPane root = new StackPane();
         root.getChildren().addAll(backgroundImageView, layout);
 
+        // Ensure background image stays at the back
+        backgroundImageView.toBack();
+
+        // Scene Setup
         Scene scene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
@@ -170,7 +204,7 @@ public class UserController {
     }
 
 
-    private static void showUpdateForm(Stage ownerStage) {
+    public void showUpdateForm(Stage ownerStage) {
         VBox updateForm = new VBox(20);
         updateForm.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
         updateForm.setPadding(new Insets(20));
