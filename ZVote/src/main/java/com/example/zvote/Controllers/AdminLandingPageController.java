@@ -139,6 +139,13 @@ public class AdminLandingPageController {
         addPollButton.setGraphic(addImageViewButton);
         addPollButton.setStyle("-fx-background-color: transparent; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
                 "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
+        addPollButton.setOnAction(e -> {
+            try {
+                new AdminPollController().showCreatePoll(primaryStage, (UserModel) userSession.get("user"));
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
 
         // Delete Poll Button with Image
