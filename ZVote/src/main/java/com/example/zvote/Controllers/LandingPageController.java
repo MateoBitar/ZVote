@@ -101,6 +101,7 @@ public class LandingPageController {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
+
         PollService pollService = new PollService();
         try {
             List<PollModel> polls = pollService.getAllPolls();
