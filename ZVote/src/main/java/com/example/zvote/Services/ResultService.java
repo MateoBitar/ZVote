@@ -58,6 +58,20 @@ public class ResultService {
         return null;
     }
 
+    // Fetch result by poll_ID and candidate_ID
+    public ResultModel getResultByPollAndCandidateID(int poll_ID, int candidate_ID) throws SQLException {
+        String query = "SELECT * FROM result WHERE poll_ID = ? AND candidate_ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, poll_ID);
+            statement.setInt(2, candidate_ID);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return ResultMapper.mapResultSetToResult(resultSet);
+            }
+        }
+        return null;
+    }
+
     // Fetch all results of a poll
     public List<ResultModel> getResultsByPollID(int poll_ID) throws SQLException {
         String query = "SELECT * FROM result WHERE poll_ID = ?";

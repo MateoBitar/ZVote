@@ -277,6 +277,7 @@ public class AdminLandingPageController {
             // Scene and Stage
             Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             primaryStage.show();
         } catch (SQLException e) {
             throw new RuntimeException(e);

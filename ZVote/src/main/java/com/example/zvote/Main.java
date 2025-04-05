@@ -134,6 +134,7 @@ public class Main extends Application {
         Scene scene = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
         primaryStage.setTitle("ZVote - Online Voting System");
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         about.setOnAction(e -> {

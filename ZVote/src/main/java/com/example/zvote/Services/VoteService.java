@@ -51,4 +51,14 @@ public class VoteService {
         }
         return votes;
     }
+
+    public boolean hasUserVoted(int userID, int pollID) throws SQLException {
+        String query = "SELECT * FROM votes WHERE user_ID = ? AND poll_ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userID);
+            statement.setInt(2, pollID);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next(); // Returns true if a row exists
+        }
+    }
 }

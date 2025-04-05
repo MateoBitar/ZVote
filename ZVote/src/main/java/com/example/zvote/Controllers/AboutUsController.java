@@ -79,6 +79,7 @@ public class AboutUsController {
         // Set Scene with Resizable Background
         Scene aboutScene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(aboutScene);
+        primaryStage.setResizable(false);
     }
 
     private void goBack() {

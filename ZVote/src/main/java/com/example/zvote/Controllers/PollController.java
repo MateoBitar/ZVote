@@ -1,9 +1,6 @@
 package com.example.zvote.Controllers;
 
-import com.example.zvote.Models.CandidateModel;
-import com.example.zvote.Models.PollModel;
-import com.example.zvote.Models.UserModel;
-import com.example.zvote.Models.VoteModel;
+import com.example.zvote.Models.*;
 import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.ResultService;
 import com.example.zvote.Services.VoteService;
@@ -151,11 +148,15 @@ public class PollController {
             }
         });
 
-        // Add components to the info section
         pollInfoSection.getChildren().addAll(pollTitleLabel, pollDescriptionLabel, statusLabel, chartTitle, space, pieChart);
-        if (daysLeft >= 0) { // Only show Vote button if poll is active
-            pollInfoSection.getChildren().add(voteButton);
-        } else { // Show winner if poll is completed
+
+        VoteService voteService = new VoteService();
+        boolean hasVoted = voteService.hasUserVoted(user.getUser_ID(), poll.getPoll_ID());
+        if (daysLeft >= 0) { // Poll is active
+            if (!hasVoted) { // User didn't vote
+                pollInfoSection.getChildren().add(voteButton);
+            }
+        } else { // Poll is closed
             pollInfoSection.getChildren().add(winnerLabel);
         }
 
@@ -164,60 +165,125 @@ public class PollController {
         // Scene setup
         Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 
     private void showVotingSection(Stage primaryStage, PollModel poll, UserModel user) throws Exception {
-        VBox votingLayout = new VBox(20);
-        votingLayout.setPadding(new Insets(20));
-        votingLayout.setAlignment(Pos.CENTER);
+        // Main voting layout
+        VBox votingLayout = new VBox(30);
+        votingLayout.setAlignment(Pos.TOP_CENTER);
 
+        // Top Bar
+        HBox topBar = new HBox();
+        topBar.setPadding(new Insets(10, 10, 10, 40));
+        topBar.setStyle("-fx-background-color: #C8F0FF;");
+        topBar.setAlignment(Pos.CENTER_LEFT);
+        topBar.setMaxWidth(Double.MAX_VALUE); // Ensure the top bar fills the width
+
+        // Create a shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setRadius(5);
+        shadow.setOffsetY(2);
+        shadow.setColor(Color.LIGHTGRAY);
+
+        // Apply shadow to topBar
+        topBar.setEffect(shadow);
+
+        // Logo on the left
+        Label logo = new Label("ZVote");
+        logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
+
+        // Back Button on the right
+        Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setOnAction(event -> {
+            try {
+                showPollDetails(primaryStage, poll, user); // Navigate back to poll details
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        // Align logo to the left and back button to the right
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS); // Make the spacer take up all available space between the logo and back button
+
+        topBar.getChildren().addAll(logo, spacer, backButton);
+
+        // Candidate Label
         Label candidateLabel = new Label("Vote for your Candidate");
-        candidateLabel.setStyle("-fx-font-size: 25px; -fx-font-weight: bold;");
+        candidateLabel.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
 
         // Candidates Section
         CandidateService candidateService = new CandidateService();
         List<CandidateModel> candidates = candidateService.getCandidatesByPollID(poll.getPoll_ID());
         ToggleGroup candidatesGroup = new ToggleGroup();
-        VBox candidatesSection = new VBox(10);
+
+        VBox candidatesSection = new VBox(10); // Spacing between candidates
+        candidatesSection.setAlignment(Pos.CENTER); // Center the candidates section
         for (CandidateModel candidate : candidates) {
             RadioButton candidateButton = new RadioButton(candidate.getName());
             candidateButton.setToggleGroup(candidatesGroup);
-            candidateButton.setUserData(candidate.getCandidate_ID());
-            candidateButton.setStyle("-fx-font-size: 18px;");
+            candidateButton.setUserData(candidate.getCandidate_ID()); // Store candidate ID
+            candidateButton.setStyle("-fx-font-size: 20px;");
             candidatesSection.getChildren().add(candidateButton);
         }
 
+        // Submit Button
         Button submitButton = new Button("Submit Vote");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px;");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
         submitButton.setOnAction(event -> {
             RadioButton selectedCandidate = (RadioButton) candidatesGroup.getSelectedToggle();
             if (selectedCandidate == null) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setContentText("Please select a candidate before submitting your vote.");
-                alert.showAndWait();
+                try {
+                    VoteService voteService = new VoteService();
+                    VoteModel vote = new VoteModel(user.getUser_ID(), poll.getPoll_ID(), 1, 0);
+
+                    voteService.addVote(vote);
+
+                    poll.setNbOfVotes(poll.getNbOfVotes() + 1);
+                    poll.setNbOfAbstentions(poll.getNbOfAbstentions() + 1);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             } else {
                 try {
                     int pollId = poll.getPoll_ID();
                     int candidateId = (int) selectedCandidate.getUserData();
                     int voterId = user.getUser_ID();
-                    int timestamp = (int) (System.currentTimeMillis() / 1000);
 
-                    VoteModel vote = new VoteModel(pollId, candidateId, voterId, timestamp);
                     VoteService voteService = new VoteService();
+                    VoteModel vote = new VoteModel(voterId, pollId, 0, candidateId);
+
                     voteService.addVote(vote);
 
+                    ResultService resultService = new ResultService();
+                    ResultModel result = resultService.getResultByPollAndCandidateID(pollId, candidateId);
+
+                    if (result == null) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Failed to submit vote");
+                        alert.setContentText("No result object found for this poll and candidate!");
+                        alert.showAndWait();
+                    }
+                    result.setVotes_casted(result.getVotes_casted() + 1);
+                    resultService.updateResult(result);
+
+                    poll.setNbOfVotes(poll.getNbOfVotes() + 1);
+
+                    // Success alert
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");
                     alert.setContentText("Your vote has been submitted successfully!");
                     alert.showAndWait();
-                    primaryStage.close();
 
-                    // Optionally return to the main page or poll list
+                    UserController.userSession.put("user", user);
+                    // Navigate back to landing page
                     LandingPageController landingPageController = new LandingPageController();
                     landingPageController.showLandingPage(primaryStage, UserController.userSession);
                 } catch (Exception e) {
+                    // Error alert for vote submission failure
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setContentText("An error occurred while submitting your vote. Please try again.");
@@ -226,11 +292,13 @@ public class PollController {
             }
         });
 
-        votingLayout.getChildren().addAll(candidateLabel, candidatesSection, submitButton);
+        // Add components to voting layout
+        votingLayout.getChildren().addAll(topBar, candidateLabel, candidatesSection, submitButton);
 
         // Scene setup
-        Scene scene = new Scene(votingLayout, 800, 600);
+        Scene scene = new Scene(votingLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 }

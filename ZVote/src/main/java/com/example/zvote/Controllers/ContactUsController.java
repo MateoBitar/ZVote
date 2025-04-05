@@ -72,6 +72,7 @@ public class ContactUsController {
         // Set Scene with Resizable Background
         Scene contactScene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
         primaryStage.setScene(contactScene);
+        primaryStage.setResizable(false);
     }
 
     private void goBack() {
