@@ -26,14 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PollController {
-
-    private static PollModel currentPoll;
-    private static UserModel currentUser;
-
     public void showPollDetails(Stage primaryStage, PollModel poll, UserModel user) throws Exception {
-        currentPoll = poll;
-        currentUser = user;
-
         // Main layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: transparent;");
