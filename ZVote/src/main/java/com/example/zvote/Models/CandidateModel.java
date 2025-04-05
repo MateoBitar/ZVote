@@ -50,7 +50,7 @@ public class CandidateModel {
         else {
             try {
                 // Use a default photo path and convert it to a byte array
-                Path defaultPhotoPath = Paths.get("C:\\Computer Science projects\\Repositories\\ZVote\\ZVote\\src\\main\\resources\\images\\Profile Pic.png"); // Replace photoPath with your actual path variable
+                Path defaultPhotoPath = Paths.get("src/main/resources/images/Profile Pic.png");
                 if (Files.exists(defaultPhotoPath)) {
                     // Proceed with reading the file
                     this.photo = Files.readAllBytes(defaultPhotoPath);
