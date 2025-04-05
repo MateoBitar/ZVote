@@ -11,6 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -306,9 +308,18 @@ public class PollController {
 
         // Add components to voting layout
         votingLayout.getChildren().addAll(topBar, candidateLabel, candidatesSection, submitButton);
-        votingLayout.setStyle("-fx-background-color: White");
+
+        // Background Image
+        ImageView backgroundImageView = new ImageView(new Image(getClass().getResource("/images/VotePic.png").toExternalForm()));
+        backgroundImageView.setPreserveRatio(false);
+        backgroundImageView.setFitWidth(Screen.getPrimary().getBounds().getWidth());
+        backgroundImageView.setFitHeight(Screen.getPrimary().getBounds().getHeight() - 80);
+
+        StackPane root = new StackPane();
+        root.getChildren().addAll(backgroundImageView, votingLayout);
+
         // Scene setup
-        Scene scene = new Scene(votingLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
+        Scene scene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
