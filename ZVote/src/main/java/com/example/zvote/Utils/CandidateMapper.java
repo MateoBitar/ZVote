@@ -10,8 +10,7 @@ public class CandidateMapper {
         CandidateModel candidate = new CandidateModel(
                 rs.getString("name"),
                 rs.getBytes("photo"),
-                rs.getString("bio"),
-                rs.getInt("poll_ID")
+                rs.getString("bio")
         );
         candidate.setCandidate_ID(rs.getInt("candidate_ID")); // Ensure candidate_ID is retrieved
 

@@ -18,24 +18,27 @@ public class PollService {
 
     // Add a poll
     public void addPoll(PollModel poll) throws SQLException {
+        // Step 1: Check if the poll title already exists in the database
         String checkQuery = "SELECT COUNT(*) FROM polls WHERE title = ?";
-        try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
-             ResultSet resultSet = checkStatement.executeQuery()) {
-            checkStatement.setString(1, poll.getTitle());
-            if (resultSet.next() && resultSet.getInt(1) > 0) {
-                throw new IllegalArgumentException("Poll title already exists. Please choose another title.");
+        try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
+            checkStatement.setString(1, poll.getTitle()); // Set the parameter for title
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next() && resultSet.getInt(1) > 0) {
+                    throw new IllegalArgumentException("Poll title already exists. Please choose another title.");
+                }
             }
         }
 
-        String insertQuery = "INSERT INTO polls (title, description, start_date, end_date, nbOfVotes, nbOfAbstentions" +
-                ", admin_ID) VALUES (?, ?, ?, ?, 0, 0, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-            statement.setString(1, poll.getTitle());
-            statement.setString(2, poll.getDescription());
-            statement.setTimestamp(3, new Timestamp(poll.getStart_date().getTime()));
-            statement.setTimestamp(4, new Timestamp(poll.getEnd_date().getTime()));
-            statement.setInt(5, poll.getAdmin_ID());
-            statement.executeUpdate();
+        // Step 2: Insert the new poll into the database
+        String insertQuery = "INSERT INTO polls (title, description, start_date, end_date, nbOfVotes, nbOfAbstentions, admin_ID) "
+                + "VALUES (?, ?, ?, ?, 0, 0, ?)";
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+            insertStatement.setString(1, poll.getTitle()); // Set the title
+            insertStatement.setString(2, poll.getDescription()); // Set the description
+            insertStatement.setTimestamp(3, new Timestamp(poll.getStart_date().getTime())); // Set the start date
+            insertStatement.setTimestamp(4, new Timestamp(poll.getEnd_date().getTime()));   // Set the end date
+            insertStatement.setInt(5, poll.getAdmin_ID()); // Set the admin ID
+            insertStatement.executeUpdate(); // Execute the insert query
         }
     }
 

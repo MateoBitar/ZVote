@@ -1,6 +1,7 @@
 package com.example.zvote.Controllers;
 
 import com.example.zvote.Models.*;
+import com.example.zvote.Services.PollService;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,6 +15,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.sql.Date;
+import java.time.ZoneId;
 
 public class AdminPollController {
 
@@ -134,15 +138,25 @@ public class AdminPollController {
         createPollForm.add(endDatePicker, 1, 4);
 
 
-        Button submitButton = new Button("Save Changes");
+        Button submitButton = new Button("Submit");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
                 " -fx-border-radius: 10px; -fx-font-size: 15px;");
         submitButton.setPrefWidth(120);
         submitButton.setPrefHeight(38);
         submitButton.setOnAction(event -> {
-
+            PollModel newPoll = new PollModel(pollTitleField.getText(), pollDescriptionField.getText(),
+                    Date.from((startdatePicker.getValue()).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                            Date.from((endDatePicker.getValue()).atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                            user.getUser_ID());
+            try {
+                new PollService().addPoll(newPoll);
+                new CandidateController().displayCandidates(primaryStage, newPoll.getPoll_ID());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
         createPollForm.add(submitButton, 0, 5);
+
         // Make the submitButton span 2 columns
         GridPane.setColumnSpan(submitButton, 2);
         GridPane.setHalignment(submitButton, HPos.CENTER); // Center horizontally

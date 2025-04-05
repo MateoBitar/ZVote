@@ -18,12 +18,11 @@ public class CandidateService {
 
     // Add a candidate
     public void addCandidate(CandidateModel candidate) throws SQLException {
-        String insertQuery = "INSERT INTO candidates (name, photo, bio, poll_ID) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO candidates (name, photo, bio) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setString(1, candidate.getName());
             statement.setBytes(2, candidate.getPhoto());
             statement.setString(3, candidate.getBio());
-            statement.setInt(4, candidate.getPoll_ID());
             statement.executeUpdate();
         }
     }
@@ -54,15 +53,27 @@ public class CandidateService {
         return null;
     }
 
-    // Fetch all candidates of a poll
+    // Fetch all candidates linked to a poll via the result table
     public List<CandidateModel> getCandidatesByPollID(int poll_ID) throws SQLException {
-        String query = "SELECT * FROM candidates WHERE poll_ID = ?";
+        String queryFetchCandidateIds = "SELECT candidate_ID FROM result WHERE poll_ID = ?";
+        String queryFetchCandidates = "SELECT * FROM candidates WHERE candidates.candidate_ID = ?";
         List<CandidateModel> candidates = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, poll_ID);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    candidates.add(CandidateMapper.mapResultSetToCandidate(resultSet));
+
+        try (PreparedStatement statementCandidateIds = connection.prepareStatement(queryFetchCandidateIds)) {
+            statementCandidateIds.setInt(1, poll_ID);
+            try (ResultSet resultSetCandidateIds = statementCandidateIds.executeQuery()) {
+                while (resultSetCandidateIds.next()) {
+                    int candidateId = resultSetCandidateIds.getInt("candidate_ID");
+
+                    // Fetch candidate details for each candidate ID
+                    try (PreparedStatement statementCandidates = connection.prepareStatement(queryFetchCandidates)) {
+                        statementCandidates.setInt(1, candidateId);
+                        try (ResultSet resultSetCandidates = statementCandidates.executeQuery()) {
+                            while (resultSetCandidates.next()) {
+                                candidates.add(CandidateMapper.mapResultSetToCandidate(resultSetCandidates));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -71,13 +82,12 @@ public class CandidateService {
 
     // Update a candidate
     public void updateCandidate(CandidateModel candidate) throws SQLException {
-        String query = "UPDATE candidates SET name = ?, photo = ?, bio = ?, poll_ID = ? WHERE candidate_ID = ?";
+        String query = "UPDATE candidates SET name = ?, photo = ?, bio = ? WHERE candidate_ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, candidate.getName());
             statement.setBytes(2, candidate.getPhoto());
             statement.setString(3, candidate.getBio());
-            statement.setInt(4, candidate.getPoll_ID());
-            statement.setInt(5, candidate.getCandidate_ID());
+            statement.setInt(4, candidate.getCandidate_ID());
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new SQLException("Candidate not found.");
