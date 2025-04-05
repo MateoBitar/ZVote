@@ -36,6 +36,46 @@ public class AdminLandingPageController {
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
 
+
+        Label logo = new Label("ZVote");
+        logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
+
+
+        // Polls Button
+        Button pollIcon = new Button("\uD83D\uDCCB");
+        pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
+        pollIcon.setPrefSize(70,30);
+        pollIcon.setTranslateX(150);
+
+
+        // Profile Button
+        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
+        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
+        profileIcon.setPrefSize(70, 30);
+        profileIcon.setTranslateX(150);
+        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+        profileIcon.setOnAction(e -> {
+            UserController userController = new UserController();
+            userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
+        });
+
+
+        // MenuIcon
+        Label menuIcon = new Label("\u283F"); // Unicode for menu icon
+        menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
+        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
+
+
+        // Menu
+        HBox menu = new HBox(-10);
+        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
+        menu.setAlignment(Pos.CENTER_RIGHT);
+
+
+
         // topBar
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(10,10,10,40));
@@ -48,240 +88,127 @@ public class AdminLandingPageController {
         shadow.setOffsetY(2);
         shadow.setColor(Color.LIGHTGRAY);
 
-        // Apply shadow to topBar
-        topBar.setEffect(shadow);
+        topBar.setEffect(shadow);   // Apply shadow to topBar
 
-        Label logo = new Label("ZVote");
-        logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
 
-        HBox menu = new HBox(-10);
+        // Add the topBar info to topBar
+        HBox.setHgrow(menu, Priority.ALWAYS);
+        topBar.getChildren().addAll(logo, menu);
 
-        // Polls Button
-        Button pollIcon = new Button("\uD83D\uDCCB");
-        pollIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 25; -fx-background-color: #C8F0FF; -fx-text-fill: white;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
-        pollIcon.setPrefHeight(30);
-        pollIcon.setPrefWidth(70);
-        pollIcon.setTranslateX(150);
+        layout.setTop(topBar);  // Add the topBar to the top of the layout
 
-        // Profile Button
-        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
-        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
-        profileIcon.setPrefHeight(30);
-        profileIcon.setPrefWidth(70);
-        profileIcon.setTranslateX(150);
-        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
-        profileIcon.setOnAction(e -> {
-            UserController userController = new UserController();
-            userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
-        });
-        Label menuIcon = new Label("\u283F"); // Unicode for menu icon
-        menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
-        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
 
-        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
-        menu.setAlignment(Pos.CENTER_RIGHT);
 
-        VBox content = new VBox(10);
-        content.setAlignment(Pos.CENTER);
-        content.setPadding(new Insets(5, 0, 0, 0));
+        // Tabs
+        Tab add = new Tab("Add");
+        Tab delete = new Tab("Delete");
 
+
+        // Tab Pane
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.setStyle("-fx-font-weight: bold");
 
+        tabPane.getTabs().addAll(add, delete); // Apply tabs to the tabPane
 
-        Tab add = new Tab("Add");
-        Tab delete = new Tab("Delete");
-        tabPane.getTabs().addAll(add, delete);
 
+
+        // Add Tab content
+        VBox addcontent = new VBox(10);
+        addcontent.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
+        addcontent.setAlignment(Pos.CENTER);
+        addcontent.setPadding(new Insets(5, 0, 0, 0));
+        addcontent.setStyle("-fx-background-color: #FFFFFF;");
+
+
+        // Delete Tab Content
         VBox deletecontent = new VBox(10);
+        deletecontent.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
         deletecontent.setAlignment(Pos.CENTER);
+        deletecontent.setPadding(new Insets(5, 0, 0, 0));
         deletecontent.setStyle("-fx-background-color: #FFFFFF;");
 
-        HBox.setHgrow(menu, Priority.ALWAYS);
-        topBar.getChildren().addAll(logo, menu);
-        layout.setTop(topBar);
 
-        ImageView imageViewButton = new ImageView(new Image(getClass().getResource("/images/Plus Sign.png").toExternalForm()));
-        imageViewButton.setFitHeight(30);
-        imageViewButton.setFitWidth(30);
+
+        // Add Poll Button with Image
+        ImageView addImageViewButton = new ImageView(new Image(getClass().getResource("/images/Plus Sign.png").toExternalForm()));
+        addImageViewButton.setFitHeight(30);
+        addImageViewButton.setFitWidth(30);
 
         Button addPollButton = new Button("Add Poll");
-        addPollButton.setGraphic(imageViewButton);
+        addPollButton.setGraphic(addImageViewButton);
         addPollButton.setStyle("-fx-background-color: transparent; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
                 "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
 
-        // Poll Cards
-        GridPane pollGrid = new GridPane();
-        pollGrid.setHgap(30);
-        pollGrid.setVgap(30);
-        pollGrid.setAlignment(Pos.CENTER);
-        pollGrid.setPadding(new Insets(10, 0, 0,0));
 
-        // Wrap the pollGrid in a ScrollPane
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(content);
-        scrollPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() - (topBar.getHeight() + addPollButton.getHeight()));
-        scrollPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() - 50);
-        scrollPane.setStyle("-fx-background-color: transparent;");
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        // Delete Poll Button with Image
+        ImageView deleteImageViewButton = new ImageView(new Image(getClass().getResource("/images/Minus Sign.png").toExternalForm()));
+        deleteImageViewButton.setFitHeight(30);
+        deleteImageViewButton.setFitWidth(30);
 
-        PollService pollService = new PollService();
-        try {
-            java.util.List<PollModel> polls = pollService.getAllPolls();
-            for (PollModel poll : polls) {
-                VBox pollCard = new VBox();
-                pollCard.setAlignment(Pos.TOP_CENTER);
-                pollCard.setPadding(new Insets(10));
-                pollCard.setStyle(
-                        "-fx-background-color: #C8F0FF;" +
-                                "-fx-border-radius: 10px; " +
-                                "-fx-background-radius: 10px;" +
-                                "-fx-border-width: 3px;" +
-                                "-fx-border-color: #000000;" +
-                                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.0, 3, 3);"
-                );
-                pollCard.setPrefSize(300,400);
-
-                Label pollLabel = new Label(poll.getTitle());
-                pollLabel.setStyle(
-                        "-fx-background-color: #FFFFFF;" +
-                                "-fx-border-radius: 10px; " +
-                                "-fx-background-radius: 10px;" +
-                                "-fx-border-width: 3px;" +
-                                "-fx-border-color: #000000;" +
-                                "-fx-font-size: 30px;" +
-                                "-fx-font-weight: bold;"
-                );
-                pollLabel.setAlignment(Pos.CENTER);
-                pollLabel.setWrapText(true);
-                pollLabel.setMaxWidth(250);
-                pollLabel.setPadding(new Insets(0,0,0,10));
-
-                // Poll status
-                Label statusLabel = new Label();
-                statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
-
-                Timestamp endDate = (Timestamp) poll.getEnd_date(); // java.sql.Timestamp
-                LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-
-                LocalDate today = LocalDate.now();
-                long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
-
-                // Set status text based on time
-                if (daysLeft > 0) {
-                    statusLabel.setText("Status: Active • " + daysLeft + " day(s) left");
-                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Green;");
-                } else if (daysLeft == 0) {
-                    statusLabel.setText("Status: Last day to vote!");
-                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Orange;");
-                } else {
-                    statusLabel.setText("Status: Completed");
-                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
-                }
+        Button deletePollButton = new Button("Delete Poll");
+        deletePollButton.setGraphic(deleteImageViewButton);
+        deletePollButton.setStyle("-fx-background-color: transparent; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
+                "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
 
 
-                // Fetch candidates for the poll
-                ResultService resultService = new ResultService();
-                List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
 
-                // Create a VBox to hold candidate names
-                VBox candidatesBox = new VBox(5); // 5px spacing between candidate names
-                candidatesBox.setAlignment(Pos.TOP_LEFT);
-                candidatesBox.setPadding(new Insets(20, 0, 0, 0));
-
-                Label candidatesLabel = new Label("Candidates:");
-                candidatesLabel.setStyle(
-                        "-fx-font-weight: bold;" +
-                                "-fx-font-size: 20px;"
-                );
-
-                candidatesBox.getChildren().add(candidatesLabel);
-
-                for (CandidateModel candidate : candidates) {
-                    HBox candidateBox = new HBox(10);  // Spacing between elements
-                    candidateBox.setAlignment(Pos.CENTER_LEFT);  // Align everything to the left
-
-                    // Candidate name label
-                    Label nameLabel = new Label(candidate.getName());
-                    nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
-
-                    // Percentage label
-                    Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
-                    percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+        // Wrap the pollGrid in a ScrollPane for Add tab
+        ScrollPane addScrollPane = new ScrollPane();
+        addScrollPane.setContent(addcontent);
+        addScrollPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() - (topBar.getHeight() + addPollButton.getHeight()));
+        addScrollPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() - 50);
+        addScrollPane.setStyle("-fx-background-color: transparent;");
+        addScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        addScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 
-                    // Progress bar for vote percentage
-                    ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
-                    voteBar.setPrefWidth(80); // Width of the progress bar
-
-                    // Dynamically update the percentage label whenever the progress bar changes
-                    voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-                        percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));  // Update percentage label dynamically
-                    });
-
-                    // Add the name, progress bar, and percentage label to the HBox
-                    candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel);
-
-                    // Add the candidate box to the candidates container
-                    candidatesBox.getChildren().add(candidateBox);
-                }
-
-                // Add space between title and button
-                Region spacer = new Region();
-                VBox.setVgrow(spacer, Priority.ALWAYS);
-
-                Button viewPollButton = new Button("View Poll");
-                viewPollButton.setStyle(
-                        "-fx-background-color: #C8F0FF; " +
-                                "-fx-text-fill: black; " +
-                                "-fx-border-radius: 5px;" +
-                                "-fx-border-color: #000000;" +
-                                "-fx-border-width: 2px; " +
-                                "-fx-font-size: 14px; " +
-                                "-fx-font-weight: bold; " +
-                                "-fx-cursor: hand; " +
-                                "-fx-background-radius: 20;"
-                );
-                viewPollButton.setPrefHeight(30);
-
-                pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, viewPollButton);
-
-                // Hover effect for moving the card up
-                pollCard.setOnMouseEntered(e -> {
-                    TranslateTransition hoverIn = new TranslateTransition(Duration.millis(150), pollCard);
-                    hoverIn.setToY(-10);  // Move up by 10 pixels
-                    hoverIn.play();
-                });
-
-                pollCard.setOnMouseExited(e -> {
-                    TranslateTransition hoverOut = new TranslateTransition(Duration.millis(150), pollCard);
-                    hoverOut.setToY(10);  // Move back down by 10 pixels
-                    hoverOut.play();
-                });
+        // Wrap the pollGrid in a ScrollPane for Delete tab
+        ScrollPane deleteScrollPane = new ScrollPane();
+        deleteScrollPane.setContent(deletecontent);
+        deleteScrollPane.setPrefHeight(Screen.getPrimary().getVisualBounds().getHeight() - (topBar.getHeight() + addPollButton.getHeight()));
+        deleteScrollPane.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() - 50);
+        deleteScrollPane.setStyle("-fx-background-color: transparent;");
+        deleteScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        deleteScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
 
-                pollGrid.add(pollCard, (polls.indexOf(poll) % 4), (polls.indexOf(poll) / 4)); // Dynamic positioning
-            }
 
-            content.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
-            content.getChildren().addAll(addPollButton, pollGrid);
+        // Grid for Add Tab
+        GridPane addPollGrid = new GridPane();
+        addPollGrid.setHgap(30);
+        addPollGrid.setVgap(30);
+        addPollGrid.setAlignment(Pos.CENTER);
+        addPollGrid.setPadding(new Insets(10, 0, 0, 0));
 
-            add.setContent(scrollPane);
-            layout.setCenter(tabPane);
 
-            // Scene and Stage
-            Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
-            primaryStage.show();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        // Grid for Delete Tab
+        GridPane deletePollGrid = new GridPane();
+        deletePollGrid.setHgap(30);
+        deletePollGrid.setVgap(30);
+        deletePollGrid.setAlignment(Pos.CENTER);
+        deletePollGrid.setPadding(new Insets(10, 0, 0, 0));
+
+
+
+        populatePollGrid(addPollGrid);  // Populate grid for Add tab
+        populatePollGrid(deletePollGrid);  // Populate grid for Delete tab
+
+
+        addcontent.getChildren().addAll(addPollButton, addPollGrid);    // Add Button And Grid to addContent
+        deletecontent.getChildren().addAll(deletePollButton, deletePollGrid);   // Add Button And Grid to deleteContent
+
+
+        add.setContent(addScrollPane);  // Add addScrollPane to Add Tab
+        delete.setContent(deleteScrollPane);    // Add deleteScrollPane to Delete Tab
+
+        layout.setCenter(tabPane);  // Add the TabPane to Layout
+
+        // Scene and Stage
+        Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
     }
 
     private static boolean isMenuOpen = false;
@@ -297,5 +224,162 @@ public class AdminLandingPageController {
         TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);
         transition.setToX(targetX);
         transition.play();
+    }
+
+    private void populatePollGrid(GridPane pollGrid) throws Exception {
+        PollService pollService = new PollService();
+        List<PollModel> polls = pollService.getAllPolls();
+        for (PollModel poll : polls) {
+            // Poll Cards for All Tabs
+            VBox pollCard = new VBox();
+            pollCard.setAlignment(Pos.TOP_CENTER);
+            pollCard.setPadding(new Insets(10));
+            pollCard.setStyle(
+                    "-fx-background-color: #C8F0FF;" +
+                            "-fx-border-radius: 10px; " +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-width: 3px;" +
+                            "-fx-border-color: #000000;" +
+                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.0, 3, 3);"
+            );
+            pollCard.setPrefSize(300,400);
+
+
+            // Poll Label for All Tabs
+            Label pollLabel = new Label(poll.getTitle());
+            pollLabel.setStyle(
+                    "-fx-background-color: #FFFFFF;" +
+                            "-fx-border-radius: 10px; " +
+                            "-fx-background-radius: 10px;" +
+                            "-fx-border-width: 3px;" +
+                            "-fx-border-color: #000000;" +
+                            "-fx-font-size: 30px;" +
+                            "-fx-font-weight: bold;"
+            );
+            pollLabel.setAlignment(Pos.CENTER);
+            pollLabel.setWrapText(true);
+            pollLabel.setMaxWidth(250);
+            pollLabel.setPadding(new Insets(0,0,0,10));
+
+
+            // Poll status for All Tabs
+            Label statusLabel = new Label();
+            statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
+
+            Timestamp endDate = (Timestamp) poll.getEnd_date();
+            LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate today = LocalDate.now();
+            long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
+
+            // Set status text based on time
+            if (daysLeft > 0) {
+                statusLabel.setText("Status: Active • " + daysLeft + " day(s) left");
+                statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Green;");
+            } else if (daysLeft == 0) {
+                statusLabel.setText("Status: Last day to vote!");
+                statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Orange;");
+            } else {
+                statusLabel.setText("Status: Completed");
+                statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
+            }
+
+
+            // Fetch candidates for the poll
+            ResultService resultService = new ResultService();
+            List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
+
+
+            // Label above Candidate Box
+            Label candidatesLabel = new Label("Candidates:");
+            candidatesLabel.setStyle(
+                    "-fx-font-weight: bold;" +
+                            "-fx-font-size: 20px;"
+            );
+
+
+            // Create a VBox to hold candidate names
+            VBox candidatesBox = new VBox(5);
+            candidatesBox.setAlignment(Pos.TOP_LEFT);
+            candidatesBox.setPadding(new Insets(20, 0, 0, 0));
+
+            candidatesBox.getChildren().add(candidatesLabel); // Apply candidatesLabel to Candidates Box
+
+
+            // Loop over Info Of Each Candidate
+            for (CandidateModel candidate : candidates) {
+                HBox candidateBox = new HBox(10);  // Spacing between elements
+                candidateBox.setAlignment(Pos.CENTER_LEFT);  // Align everything to the left
+
+
+                // Candidate name label
+                Label nameLabel = new Label(candidate.getName());
+                nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+
+
+                // Percentage label
+                Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
+                percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
+
+
+                // Progress bar for vote percentage
+                ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
+                voteBar.setPrefWidth(80); // Width of the progress bar
+
+                // Dynamically update the percentage label whenever the progress bar changes
+                voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
+                    percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));  // Update percentage label dynamically
+                });
+
+
+                candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel); // Apply candidate info to Candidate Box
+
+                candidatesBox.getChildren().add(candidateBox); // Apply Each Candidate Box to Candidates Box
+            }
+
+
+
+            // Add Button To View Poll Details
+            Button viewPollButton = new Button("View Poll");
+            viewPollButton.setStyle(
+                    "-fx-background-color: #C8F0FF; " +
+                            "-fx-text-fill: black; " +
+                            "-fx-border-radius: 5px;" +
+                            "-fx-border-color: #000000;" +
+                            "-fx-border-width: 2px; " +
+                            "-fx-font-size: 14px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-cursor: hand; " +
+                            "-fx-background-radius: 20;"
+            );
+            viewPollButton.setPrefHeight(30);
+
+
+            // Add Empty Space between candidates and button
+            Region spacer = new Region();
+            VBox.setVgrow(spacer, Priority.ALWAYS);
+
+            // Apply All Poll Card info to Poll Card
+            pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, viewPollButton);
+
+
+            // Hover effect for moving the card up
+            pollCard.setOnMouseEntered(e -> {
+                TranslateTransition hoverIn = new TranslateTransition(Duration.millis(150), pollCard);
+                hoverIn.setToY(-10);  // Move up by 10 pixels
+                hoverIn.play();
+            });
+
+
+            // Hover effect for moving card down
+            pollCard.setOnMouseExited(e -> {
+                TranslateTransition hoverOut = new TranslateTransition(Duration.millis(150), pollCard);
+                hoverOut.setToY(10);  // Move back down by 10 pixels
+                hoverOut.play();
+            });
+
+
+            // Dynamic positioning of poll Cards in the PollGrid
+            pollGrid.add(pollCard, (polls.indexOf(poll) % 4), (polls.indexOf(poll) / 4));
+        }
     }
 }
