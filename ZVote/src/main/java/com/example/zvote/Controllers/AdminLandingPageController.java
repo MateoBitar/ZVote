@@ -6,13 +6,12 @@ import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -78,21 +77,33 @@ public class AdminLandingPageController {
             UserController userController = new UserController();
             userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
         });
-        Label menuIcon = new Label("\u283F"); // Unicode for ☰ (menu icon)
+        Label menuIcon = new Label("\u283F"); // Unicode for menu icon
         menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
         menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
 
         menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
 
-        HBox.setHgrow(menu, Priority.ALWAYS);
-        topBar.getChildren().addAll(logo, menu);
-
-        layout.setTop(topBar);
-
         VBox content = new VBox(10);
         content.setAlignment(Pos.CENTER);
         content.setPadding(new Insets(5, 0, 0, 0));
+
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        tabPane.setStyle("-fx-font-weight: bold");
+
+
+        Tab add = new Tab("Add");
+        Tab delete = new Tab("Delete");
+        tabPane.getTabs().addAll(add, delete);
+
+        VBox deletecontent = new VBox(10);
+        deletecontent.setAlignment(Pos.CENTER);
+        deletecontent.setStyle("-fx-background-color: #FFFFFF;");
+
+        HBox.setHgrow(menu, Priority.ALWAYS);
+        topBar.getChildren().addAll(logo, menu);
+        layout.setTop(topBar);
 
         ImageView imageViewButton = new ImageView(new Image(getClass().getResource("/images/Plus Sign.png").toExternalForm()));
         imageViewButton.setFitHeight(30);
@@ -259,7 +270,9 @@ public class AdminLandingPageController {
 
             content.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth());
             content.getChildren().addAll(addPollButton, pollGrid);
-            layout.setCenter(scrollPane);
+
+            add.setContent(scrollPane);
+            layout.setCenter(tabPane);
 
             // Scene and Stage
             Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
