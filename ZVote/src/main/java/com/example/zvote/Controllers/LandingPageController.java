@@ -132,20 +132,27 @@ public class LandingPageController {
                 pollLabel.setAlignment(Pos.CENTER);
                 pollLabel.setWrapText(true);
                 pollLabel.setMaxWidth(250);
+                pollLabel.setMinHeight(100);
                 pollLabel.setPadding(new Insets(0,0,0,10));
 
                 // Poll status
                 Label statusLabel = new Label();
                 statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
-                Timestamp endDate = (Timestamp) poll.getEnd_date(); // java.sql.Timestamp
+                Timestamp startDate = (Timestamp) poll.getStart_date(); // java.sql.Timestamp
+                Timestamp endDate = (Timestamp) poll.getEnd_date();     // java.sql.Timestamp
+
+                LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
                 LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
                 LocalDate today = LocalDate.now();
                 long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
 
                 // Set status text based on time
-                if (daysLeft > 0) {
+                if (today.isBefore(startLocalDate)) {
+                    statusLabel.setText("Status: Inactive");
+                    statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Gray;");
+                } else if (daysLeft > 0) {
                     statusLabel.setText("Status: Active • " + daysLeft + " day(s) left");
                     statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Green;");
                 } else if (daysLeft == 0) {
@@ -155,6 +162,7 @@ public class LandingPageController {
                     statusLabel.setText("Status: Completed");
                     statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
                 }
+
 
                 // Fetch candidates for the poll
                 ResultService resultService = new ResultService();

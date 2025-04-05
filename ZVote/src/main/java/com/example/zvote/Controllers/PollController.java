@@ -86,21 +86,28 @@ public class PollController {
         Label statusLabel = new Label();
         statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
-        Timestamp endDate = (Timestamp) poll.getEnd_date();
+        Timestamp startDate = (Timestamp) poll.getStart_date(); // java.sql.Timestamp
+        Timestamp endDate = (Timestamp) poll.getEnd_date();     // java.sql.Timestamp
+
+        LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
         LocalDate today = LocalDate.now();
         long daysLeft = ChronoUnit.DAYS.between(today, endLocalDate);
 
-        // Set status text and style
-        if (daysLeft > 0) {
+        // Set status text based on time
+        if (today.isBefore(startLocalDate)) {
+            statusLabel.setText("Status: Inactive");
+            statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Gray;");
+        } else if (daysLeft > 0) {
             statusLabel.setText("Status: Active • " + daysLeft + " day(s) left");
-            statusLabel.setStyle("-fx-font-size:25px; -fx-font-weight: bold; -fx-text-fill: Green;");
+            statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Green;");
         } else if (daysLeft == 0) {
             statusLabel.setText("Status: Last day to vote!");
-            statusLabel.setStyle("-fx-font-size:25px; -fx-font-weight: bold; -fx-text-fill: Orange;");
+            statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Orange;");
         } else {
             statusLabel.setText("Status: Completed");
-            statusLabel.setStyle("-fx-font-size:25px; -fx-font-weight: bold; -fx-text-fill: Red;");
+            statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
         }
 
         // Pie Chart for Candidate Votes
@@ -146,7 +153,12 @@ public class PollController {
 
         VoteService voteService = new VoteService();
         boolean hasVoted = voteService.hasUserVoted(user.getUser_ID(), poll.getPoll_ID());
-        if (daysLeft >= 0) { // Poll is active
+
+        if (today.isBefore(startLocalDate)) {
+            Label inactiveLabel = new Label("Voting starts on • " + startLocalDate);
+            inactiveLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: Gray;");
+            pollInfoSection.getChildren().add(inactiveLabel);
+        } else if (daysLeft >= 0) { // Poll is active
             if (!hasVoted) { // User didn't vote
                 pollInfoSection.getChildren().add(voteButton);
             } else {
