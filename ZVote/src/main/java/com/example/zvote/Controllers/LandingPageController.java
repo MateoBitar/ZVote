@@ -9,10 +9,7 @@ import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -221,6 +218,26 @@ public class LandingPageController {
                                 "-fx-background-radius: 20;"
                 );
                 viewPollButton.setPrefHeight(30);
+                viewPollButton.setOnAction(e -> {
+                    PollController pollController = new PollController();
+                    try {
+                        // Fetch the user data from userSession and ensure type safety
+                        UserModel user = (UserModel) userSession.get("user");
+                        if (user == null) {
+                            throw new Exception("User data is missing in the session!");
+                        }
+
+                        // Navigate to the poll details
+                        pollController.showPollDetails(primaryStage, poll, user);
+
+                    } catch (Exception ex) {
+                        // Provide detailed exception handling for debugging
+                        Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                        errorAlert.setTitle("Navigation Error");
+                        errorAlert.setContentText("An error occurred while navigating to the poll details:\n" + ex.getMessage());
+                        errorAlert.showAndWait();
+                    }
+                });
 
                 pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, viewPollButton);
 

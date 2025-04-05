@@ -24,7 +24,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // Top Bar
         HBox topBar = new HBox(20);
-        topBar.setPadding(new Insets(10,10,10,40));
+        topBar.setPadding(new Insets(10, 10, 10, 40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
 
         // Create a shadow effect
@@ -111,7 +111,7 @@ public class Main extends Application {
         voteNow.setStyle("-fx-font-family: Onyx; -fx-font-size: 40; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 50");
         voteNow.setPrefWidth(200);
-        voteNow.setPadding(new Insets(3,50,3,50));
+        voteNow.setPadding(new Insets(3, 50, 3, 50));
 
         voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace(
                 "-fx-text-fill: black;", "-fx-text-fill: white;")));
@@ -131,7 +131,7 @@ public class Main extends Application {
         VBox mainLayout = new VBox(2);
         mainLayout.getChildren().addAll(topBar, content);
 
-        Scene scene = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
+        Scene scene = new Scene(mainLayout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
         primaryStage.setTitle("ZVote - Online Voting System");
         primaryStage.show();
@@ -145,7 +145,7 @@ public class Main extends Application {
             contactUsController.showContactUsScene();
         });
 
-        profileIcon.setOnAction(e-> {
+        profileIcon.setOnAction(e -> {
             SignInController.showSignInWindow(primaryStage);
         });
 
