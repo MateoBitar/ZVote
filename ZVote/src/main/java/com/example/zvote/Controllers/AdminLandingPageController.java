@@ -5,16 +5,19 @@ import com.example.zvote.Models.PollModel;
 import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -23,7 +26,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,9 +34,27 @@ import java.util.List;
 import java.util.Map;
 
 public class AdminLandingPageController {
+    TabPane tabPane;
+    Stage primaryStage;
+    Map<String, Object> userSession;
+
     public void showAdminLandingPage(Stage primaryStage, Map<String, Object> userSession) throws Exception {
+        this.primaryStage = primaryStage;
+        this.userSession = userSession;
+
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: #FFFFFF");
+
+
+        TextField searchBar = new TextField();
+        searchBar.setPromptText("Search...");
+        searchBar.setPrefWidth(300);
+        searchBar.setTranslateX(Screen.getPrimary().getVisualBounds().getWidth() / 2 - 300);
+        searchBar.setStyle("-fx-background-color: #FFFFFF; -fx-font-size: 14px; -fx-border-color: #C8F0FF; -fx-border-radius: 30px;" +
+                "-fx-background-radius: 30px;");
+
+        // Ensure the search bar can always regain focus
+        searchBar.setFocusTraversable(true);
 
 
         Label logo = new Label("ZVote");
@@ -61,6 +81,10 @@ public class AdminLandingPageController {
             UserController userController = new UserController();
             userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
         });
+
+
+        pollIcon.setFocusTraversable(false);
+        profileIcon.setFocusTraversable(false);
 
 
         // MenuIcon
@@ -93,10 +117,9 @@ public class AdminLandingPageController {
 
         // Add the topBar info to topBar
         HBox.setHgrow(menu, Priority.ALWAYS);
-        topBar.getChildren().addAll(logo, menu);
+        topBar.getChildren().addAll(logo, searchBar, menu);
 
         layout.setTop(topBar);  // Add the topBar to the top of the layout
-
 
 
         // Tabs
@@ -105,7 +128,7 @@ public class AdminLandingPageController {
 
 
         // Tab Pane
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         tabPane.setStyle("-fx-font-weight: bold");
 
@@ -148,17 +171,6 @@ public class AdminLandingPageController {
         });
 
 
-        // Delete Poll Button with Image
-        ImageView deleteImageViewButton = new ImageView(new Image(getClass().getResource("/images/Minus Sign.png").toExternalForm()));
-        deleteImageViewButton.setFitHeight(30);
-        deleteImageViewButton.setFitWidth(30);
-
-        Button deletePollButton = new Button("Delete Poll");
-        deletePollButton.setGraphic(deleteImageViewButton);
-        deletePollButton.setStyle("-fx-background-color: transparent; -fx-border-color: #C8F0FF; -fx-background-radius: 20px; -fx-border-radius: 20px;" +
-                "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
-
-
 
         // Wrap the pollGrid in a ScrollPane for Add tab
         ScrollPane addScrollPane = new ScrollPane();
@@ -187,6 +199,8 @@ public class AdminLandingPageController {
         addPollGrid.setVgap(30);
         addPollGrid.setAlignment(Pos.CENTER);
         addPollGrid.setPadding(new Insets(10, 0, 0, 0));
+        addPollGrid.setFocusTraversable(false);
+        addPollGrid.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> searchBar.requestFocus());
 
 
         // Grid for Delete Tab
@@ -195,15 +209,42 @@ public class AdminLandingPageController {
         deletePollGrid.setVgap(30);
         deletePollGrid.setAlignment(Pos.CENTER);
         deletePollGrid.setPadding(new Insets(10, 0, 0, 0));
+        deletePollGrid.setFocusTraversable(false);
+        deletePollGrid.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> searchBar.requestFocus());
 
 
+        // Fetch all polls from the PollService
+        PollService pollService = new PollService();;
+        List<PollModel> allPolls = pollService.getAllPolls();
 
-        populatePollGrid(addPollGrid);  // Populate grid for Add tab
-        populatePollGrid(deletePollGrid);  // Populate grid for Delete tab
+        populatePollGrid(addPollGrid, allPolls);  // Populate grid for Add tab
+        populatePollGrid(deletePollGrid, allPolls);  // Populate grid for Delete tab
+
+
+        searchBar.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                // Fetch all polls from PollService
+                PollService pollServiceForFilter = new PollService();
+                List<PollModel> allPollsForFilter = pollServiceForFilter.getAllPolls();
+
+                // Filter polls based on the search query
+                List<PollModel> filteredPolls = filterPolls(allPollsForFilter, newValue);
+
+                // Determine the active tab and update the corresponding grid
+                Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+                if (selectedTab.getText().equals("Add")) {
+                    populatePollGrid(addPollGrid, filteredPolls);
+                } else if (selectedTab.getText().equals("Delete")) {
+                    populatePollGrid(deletePollGrid, filteredPolls);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
 
 
         addcontent.getChildren().addAll(addPollButton, addPollGrid);    // Add Button And Grid to addContent
-        deletecontent.getChildren().addAll(deletePollButton, deletePollGrid);   // Add Button And Grid to deleteContent
+        deletecontent.getChildren().addAll(deletePollGrid);   // Add Button And Grid to deleteContent
 
 
         add.setContent(addScrollPane);  // Add addScrollPane to Add Tab
@@ -216,6 +257,7 @@ public class AdminLandingPageController {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+
     }
 
     private static boolean isMenuOpen = false;
@@ -233,46 +275,65 @@ public class AdminLandingPageController {
         transition.play();
     }
 
-    private void populatePollGrid(GridPane pollGrid) throws Exception {
-        PollService pollService = new PollService();
-        List<PollModel> polls = pollService.getAllPolls();
+    private List<PollModel> filterPolls(List<PollModel> allPolls, String query) {
+        return allPolls.stream()
+                .filter(poll -> poll.getTitle().toLowerCase().contains(query.toLowerCase()) ||
+                        poll.getDescription().toLowerCase().contains(query.toLowerCase()))
+                .toList();
+    }
+
+
+    private void populatePollGrid(GridPane pollGrid, List<PollModel> polls) throws Exception {
+        // Clear existing content in the grid
+        pollGrid.getChildren().clear();
+
+        // Loop through the polls and add poll cards to the grid
         for (PollModel poll : polls) {
-            // Poll Cards for All Tabs
-            VBox pollCard = new VBox();
-            pollCard.setAlignment(Pos.TOP_CENTER);
-            pollCard.setPadding(new Insets(10));
-            pollCard.setStyle(
-                    "-fx-background-color: #C8F0FF;" +
-                            "-fx-border-radius: 10px; " +
-                            "-fx-background-radius: 10px;" +
-                            "-fx-border-width: 3px;" +
-                            "-fx-border-color: #000000;" +
-                            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.0, 3, 3);"
+            VBox pollCard = createPollCard(poll); // Use the reusable method to create poll cards
+            pollGrid.add(
+                    pollCard,
+                    (polls.indexOf(poll) % 4), // Column index
+                    (polls.indexOf(poll) / 4)  // Row index
             );
-            pollCard.setPrefSize(300,400);
 
+            pollCard.setFocusTraversable(false);
+        }
+    }
 
-            // Poll Label for All Tabs
-            Label pollLabel = new Label(poll.getTitle());
-            pollLabel.setStyle(
-                    "-fx-background-color: #FFFFFF;" +
-                            "-fx-border-radius: 10px; " +
-                            "-fx-background-radius: 10px;" +
-                            "-fx-border-width: 3px;" +
-                            "-fx-border-color: #000000;" +
-                            "-fx-font-size: 30px;" +
-                            "-fx-font-weight: bold;"
-            );
-            pollLabel.setAlignment(Pos.CENTER);
-            pollLabel.setWrapText(true);
-            pollLabel.setMaxWidth(250);
-            pollLabel.setMinHeight(100);
-            pollLabel.setPadding(new Insets(0,0,0,10));
+    private VBox createPollCard(PollModel poll) throws Exception {
+        VBox pollCard = new VBox();
+        pollCard.setAlignment(Pos.TOP_CENTER);
+        pollCard.setPadding(new Insets(10));
+        pollCard.setStyle(
+                "-fx-background-color: #C8F0FF;" +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-border-width: 3px;" +
+                        "-fx-border-color: #000000;" +
+                        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0.0, 3, 3);"
+        );
+        pollCard.setPrefSize(300, 400);
 
+        // Poll Label
+        Label pollLabel = new Label(poll.getTitle());
+        pollLabel.setStyle(
+                "-fx-background-color: #FFFFFF;" +
+                        "-fx-border-radius: 10px; " +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-border-width: 3px;" +
+                        "-fx-border-color: #000000;" +
+                        "-fx-font-size: 30px;" +
+                        "-fx-font-weight: bold;"
+        );
+        pollLabel.setAlignment(Pos.CENTER);
+        pollLabel.setWrapText(true);
+        pollLabel.setMaxWidth(250);
+        pollLabel.setMinHeight(100);
+        pollLabel.setPadding(new Insets(0, 0, 0, 10));
 
-            // Poll status
-            Label statusLabel = new Label();
-            statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
+        // Poll Status
+        Label statusLabel = new Label();
+        statusLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #000000;");
 
             Timestamp startDate = (Timestamp) poll.getStart_date(); // java.sql.Timestamp
             Timestamp endDate = (Timestamp) poll.getEnd_date();     // java.sql.Timestamp
@@ -298,65 +359,46 @@ public class AdminLandingPageController {
                 statusLabel.setStyle("-fx-font-size:20px; -fx-font-weight: bold; -fx-text-fill: Red;");
             }
 
+        // Candidates Section
+        Label candidatesLabel = new Label("Candidates:");
+        candidatesLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px;");
 
+        VBox candidatesBox = new VBox(5);
+        candidatesBox.setAlignment(Pos.TOP_LEFT);
+        candidatesBox.setPadding(new Insets(20, 0, 0, 0));
+        candidatesBox.getChildren().add(candidatesLabel);
 
-            // Fetch candidates for the poll
-            ResultService resultService = new ResultService();
-            List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
+        ResultService resultService = new ResultService();
+        List<CandidateModel> candidates = resultService.getCandidatesWithVotesByPollID(poll.getPoll_ID());
 
+        for (CandidateModel candidate : candidates) {
+            HBox candidateBox = new HBox(10);
+            candidateBox.setAlignment(Pos.CENTER_LEFT);
 
-            // Label above Candidate Box
-            Label candidatesLabel = new Label("Candidates:");
-            candidatesLabel.setStyle(
-                    "-fx-font-weight: bold;" +
-                            "-fx-font-size: 20px;"
-            );
+            Label nameLabel = new Label(candidate.getName());
+            nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
 
+            Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
+            percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
 
-            // Create a VBox to hold candidate names
-            VBox candidatesBox = new VBox(5);
-            candidatesBox.setAlignment(Pos.TOP_LEFT);
-            candidatesBox.setPadding(new Insets(20, 0, 0, 0));
+            ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage());
+            voteBar.setPrefWidth(80);
+            voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
+                percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));
+            });
 
-            candidatesBox.getChildren().add(candidatesLabel); // Apply candidatesLabel to Candidates Box
+            candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel);
+            candidatesBox.getChildren().add(candidateBox);
+        }
 
+        // Poll Button
+        Button pollButton = new Button();
 
-            // Loop over Info Of Each Candidate
-            for (CandidateModel candidate : candidates) {
-                HBox candidateBox = new HBox(10);  // Spacing between elements
-                candidateBox.setAlignment(Pos.CENTER_LEFT);  // Align everything to the left
-
-
-                // Candidate name label
-                Label nameLabel = new Label(candidate.getName());
-                nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
-
-
-                // Percentage label
-                Label percentageLabel = new Label(String.format("%.1f%%", candidate.getVotePercentage() * 100));
-                percentageLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: normal;");
-
-
-                // Progress bar for vote percentage
-                ProgressBar voteBar = new ProgressBar(candidate.getVotePercentage()); // Between 0.0 and 1.0
-                voteBar.setPrefWidth(80); // Width of the progress bar
-
-                // Dynamically update the percentage label whenever the progress bar changes
-                voteBar.progressProperty().addListener((observable, oldValue, newValue) -> {
-                    percentageLabel.setText(String.format("%.1f%%", newValue.doubleValue() * 100));  // Update percentage label dynamically
-                });
-
-
-                candidateBox.getChildren().addAll(nameLabel, voteBar, percentageLabel); // Apply candidate info to Candidate Box
-
-                candidatesBox.getChildren().add(candidateBox); // Apply Each Candidate Box to Candidates Box
-            }
-
-
-
-            // Add Button To View Poll Details
-            Button viewPollButton = new Button("View Poll");
-            viewPollButton.setStyle(
+        // Initial Page
+        Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
+        if (selectedTab.getText().equals("Add")) {
+            pollButton.setText("View Poll");
+            pollButton.setStyle(
                     "-fx-background-color: #C8F0FF; " +
                             "-fx-text-fill: black; " +
                             "-fx-border-radius: 5px;" +
@@ -367,35 +409,126 @@ public class AdminLandingPageController {
                             "-fx-cursor: hand; " +
                             "-fx-background-radius: 20;"
             );
-            viewPollButton.setPrefHeight(30);
+            pollButton.setPrefHeight(30);
 
-
-            // Add Empty Space between candidates and button
-            Region spacer = new Region();
-            VBox.setVgrow(spacer, Priority.ALWAYS);
-
-            // Apply All Poll Card info to Poll Card
-            pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, viewPollButton);
-
-
-            // Hover effect for moving the card up
-            pollCard.setOnMouseEntered(e -> {
-                TranslateTransition hoverIn = new TranslateTransition(Duration.millis(150), pollCard);
-                hoverIn.setToY(-10);  // Move up by 10 pixels
-                hoverIn.play();
+            pollButton.setOnAction(event -> {
+                try {
+                    new AdminPollDetailsController().showAdminPollDetails(primaryStage, poll);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
 
+        } else if (selectedTab.getText().equals("Delete")) {
+            // Delete Poll Button with Image
+            ImageView deleteImageViewButton = new ImageView(new Image(getClass().getResource("/images/Minus Sign.png").toExternalForm()));
+            deleteImageViewButton.setFitHeight(20);
+            deleteImageViewButton.setFitWidth(20);
 
-            // Hover effect for moving card down
-            pollCard.setOnMouseExited(e -> {
-                TranslateTransition hoverOut = new TranslateTransition(Duration.millis(150), pollCard);
-                hoverOut.setToY(10);  // Move back down by 10 pixels
-                hoverOut.play();
+
+            pollButton.setText("Delete Poll");
+            pollButton.setGraphic(deleteImageViewButton);
+            pollButton.setStyle(
+                    "-fx-background-color: red; " +
+                            "-fx-text-fill: black; " +
+                            "-fx-border-radius: 5px;" +
+                            "-fx-border-color: #000000;" +
+                            "-fx-border-width: 2px; " +
+                            "-fx-font-size: 14px; " +
+                            "-fx-font-weight: bold; " +
+                            "-fx-cursor: hand; " +
+                            "-fx-background-radius: 5;"
+            );
+            pollButton.setPrefHeight(30);
+            pollButton.setOnAction(event -> {
+                try {
+                    PollService pollService = new PollService();
+                    pollService.deletePoll(poll.getPoll_ID());
+                    showAdminLandingPage(primaryStage, userSession);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
-
-
-            // Dynamic positioning of poll Cards in the PollGrid
-            pollGrid.add(pollCard, (polls.indexOf(poll) % 4), (polls.indexOf(poll) / 4));
         }
+
+
+        // Dynamically change the buttons when tabs are changed
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if (newTab.getText().equals("Add")) {
+                pollButton.setText("View Poll");
+                pollButton.setStyle(
+                        "-fx-background-color: #C8F0FF; " +
+                                "-fx-text-fill: black; " +
+                                "-fx-border-radius: 5px;" +
+                                "-fx-border-color: #000000;" +
+                                "-fx-border-width: 2px; " +
+                                "-fx-font-size: 14px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-cursor: hand; " +
+                                "-fx-background-radius: 5;"
+                );
+                pollButton.setPrefHeight(30);
+
+                pollButton.setOnAction(event -> {
+                    try {
+                        new AdminPollDetailsController().showAdminPollDetails(primaryStage, poll);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+            } else if (newTab.getText().equals("Delete")) {
+                // Delete Poll Button with Image
+                ImageView deleteImageViewButton = new ImageView(new Image(getClass().getResource("/images/Minus Sign.png").toExternalForm()));
+                deleteImageViewButton.setFitHeight(20);
+                deleteImageViewButton.setFitWidth(20);
+
+
+                pollButton.setText("Delete Poll");
+                pollButton.setGraphic(deleteImageViewButton);
+                pollButton.setStyle(
+                        "-fx-background-color: red; " +
+                                "-fx-text-fill: black; " +
+                                "-fx-border-radius: 5px;" +
+                                "-fx-border-color: #000000;" +
+                                "-fx-border-width: 2px; " +
+                                "-fx-font-size: 14px; " +
+                                "-fx-font-weight: bold; " +
+                                "-fx-cursor: hand; " +
+                                "-fx-background-radius: 5;"
+                );
+                pollButton.setPrefHeight(30);
+
+                pollButton.setOnAction(event -> {
+                    try {
+                        PollService pollService = new PollService();
+                        pollService.deletePoll(poll.getPoll_ID());
+                        showAdminLandingPage(primaryStage, userSession);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        });
+
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        pollCard.getChildren().addAll(pollLabel, statusLabel, candidatesBox, spacer, pollButton);
+
+        // Hover Effects
+        pollCard.setOnMouseEntered(e -> {
+            TranslateTransition hoverIn = new TranslateTransition(Duration.millis(150), pollCard);
+            hoverIn.setToY(-10);
+            hoverIn.play();
+        });
+        pollCard.setOnMouseExited(e -> {
+            TranslateTransition hoverOut = new TranslateTransition(Duration.millis(150), pollCard);
+            hoverOut.setToY(0);
+            hoverOut.play();
+        });
+
+        return pollCard;
     }
 }
