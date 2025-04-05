@@ -17,7 +17,7 @@ public class PollService {
     }
 
     // Add a poll
-    public void addPoll(PollModel poll) throws SQLException {
+    public int addPoll(PollModel poll) throws SQLException {
         // Step 1: Check if the poll title already exists in the database
         String checkQuery = "SELECT COUNT(*) FROM polls WHERE title = ?";
         try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery)) {
@@ -30,15 +30,26 @@ public class PollService {
         }
 
         // Step 2: Insert the new poll into the database
-        String insertQuery = "INSERT INTO polls (title, description, start_date, end_date, nbOfVotes, nbOfAbstentions, admin_ID) "
-                + "VALUES (?, ?, ?, ?, 0, 0, ?)";
-        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+        String insertQuery = "INSERT INTO polls (title, description, start_date, end_date, nbOfVotes, nbOfAbstentions, admin_ID) " +
+                "VALUES (?, ?, ?, ?, 0, 0, ?)";
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
             insertStatement.setString(1, poll.getTitle()); // Set the title
             insertStatement.setString(2, poll.getDescription()); // Set the description
             insertStatement.setTimestamp(3, new Timestamp(poll.getStart_date().getTime())); // Set the start date
             insertStatement.setTimestamp(4, new Timestamp(poll.getEnd_date().getTime()));   // Set the end date
             insertStatement.setInt(5, poll.getAdmin_ID()); // Set the admin ID
-            insertStatement.executeUpdate(); // Execute the insert query
+
+            // Execute the insert query
+            insertStatement.executeUpdate();
+
+            // Retrieve the generated poll_ID
+            try (ResultSet generatedKeys = insertStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1); // Return the generated poll_ID
+                } else {
+                    throw new SQLException("Creating poll failed, no poll_ID obtained.");
+                }
+            }
         }
     }
 

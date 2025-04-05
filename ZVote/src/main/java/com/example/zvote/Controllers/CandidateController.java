@@ -44,18 +44,22 @@ public class CandidateController {
 
         tableView.getColumns().addAll(nameColumn, checkBoxColumn);
 
+        ResultService resultService = new ResultService();
+
         // Submit Button
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(event -> {
             // Create ResultModel objects for selected candidates
-            List<ResultModel> results = new ArrayList<>();
             for (CandidateModel candidate : candidates) {
                 CheckBox checkBox = checkBoxMap.get(candidate);
                 if (checkBox != null && checkBox.isSelected()) {
-                    results.add(new ResultModel(new Date(), 0.00, candidate.getCandidate_ID(), pollId));
+                    try {
+                        resultService.addResult(new ResultModel(new Date(), 0.00, candidate.getCandidate_ID(), pollId));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
-            saveResultsToDatabase(results);
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Candidates linked to the poll successfully!");
             alert.showAndWait();
 
@@ -70,19 +74,5 @@ public class CandidateController {
         Scene scene = new Scene(vBox, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         stage.setScene(scene);
         stage.show();
-    }
-
-    // Replace this with actual database saving logic
-    private void saveResultsToDatabase(List<ResultModel> results) {
-        try {
-            for (ResultModel result : results) {
-                new ResultService().addResult(result); // Use your existing function to add each ResultModel to the database
-            }
-            System.out.println("All results successfully saved to the database.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Failed to save results to the database: " + e.getMessage());
-        }
-
     }
 }

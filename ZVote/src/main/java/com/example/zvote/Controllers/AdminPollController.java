@@ -149,7 +149,7 @@ public class AdminPollController {
                             Date.from((endDatePicker.getValue()).atStartOfDay(ZoneId.systemDefault()).toInstant()),
                             user.getUser_ID());
             try {
-                new PollService().addPoll(newPoll);
+                newPoll.setPoll_ID(new PollService().addPoll(newPoll));
                 new CandidateController().displayCandidates(primaryStage, newPoll.getPoll_ID());
             } catch (Exception e) {
                 throw new RuntimeException(e);
