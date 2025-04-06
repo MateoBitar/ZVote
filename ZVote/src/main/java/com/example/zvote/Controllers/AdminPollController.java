@@ -140,10 +140,10 @@ public class AdminPollController {
         createPollForm.add(endDatePicker, 1, 4);
 
 
-        Button submitButton = new Button("Submit");
+        Button submitButton = new Button("Choose Candidates");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
                 " -fx-border-radius: 10px; -fx-font-size: 15px;");
-        submitButton.setPrefWidth(120);
+        submitButton.setPrefWidth(160);
         submitButton.setPrefHeight(38);
         submitButton.setOnAction(event -> {
             LocalDate startDate = startdatePicker.getValue();

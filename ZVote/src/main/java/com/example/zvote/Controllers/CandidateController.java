@@ -26,7 +26,7 @@ import java.util.*;
 public class CandidateController {
 
     public void displayCandidates(Stage stage, int pollId) throws Exception {
-        // topBar
+        // Top Bar
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(10, 10, 10, 40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
@@ -51,13 +51,15 @@ public class CandidateController {
 
         // Fetch all candidates from the CandidateService
         ObservableList<CandidateModel> candidates = FXCollections.observableArrayList(
-                new CandidateService().getAllCandidates());
+                new CandidateService().getAllCandidates()
+        );
 
         TableView<CandidateModel> tableView = new TableView<>();
         tableView.setStyle("-fx-background-color: #C8F0FF; -fx-font-size: 16px;");
         tableView.setItems(candidates);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        VBox.setVgrow(tableView, Priority.ALWAYS); // Ensures the table grows to fill space
+
+        tableView.setPrefHeight(600);
 
         // Map to store CheckBoxes associated with each CandidateModel
         Map<CandidateModel, CheckBox> checkBoxMap = new HashMap<>();
@@ -67,7 +69,6 @@ public class CandidateController {
         nameColumn.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getName()));
         nameColumn.setStyle("-fx-alignment: CENTER; -fx-text-fill: black; -fx-font-weight: bold;");
-
 
         // CheckBox Column for selection
         TableColumn<CandidateModel, CheckBox> checkBoxColumn = new TableColumn<>("Select");
@@ -107,16 +108,9 @@ public class CandidateController {
             }
         });
 
-
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setContent(tableView);
-        scrollPane.setFitToWidth(true); // Ensures the table width matches the ScrollPane's width
-        scrollPane.setStyle("-fx-background: transparent;");
-
-
         VBox vBox = new VBox();
         vBox.setSpacing(20);
-        vBox.getChildren().addAll(topBar, label, scrollPane, submitButton);
+        vBox.getChildren().addAll(topBar, label, tableView, submitButton);
         vBox.setAlignment(Pos.TOP_CENTER);
         vBox.setStyle("-fx-background-color: white;");
 
