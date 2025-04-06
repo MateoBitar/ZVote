@@ -22,6 +22,7 @@ import javafx.stage.StageStyle;
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.example.zvote.Controllers.LandingPageController.animateMenu;
 
@@ -69,10 +70,18 @@ public class UserController {
         pollIcon.setOnMouseExited(e -> pollIcon.setStyle(pollIcon.getStyle().replace(
                 "-fx-text-fill: white;", "-fx-text-fill: black;")));
         pollIcon.setOnAction(e -> {
-            try {
-                new LandingPageController().showLandingPage(primaryStage, userSession);
-            } catch (Exception ex) {
-                throw new RuntimeException(ex);
+            if(currentUser.getRole().equals("admin")) {
+                try {
+                    new AdminLandingPageController().showAdminLandingPage(primaryStage, userSession);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            } else if(currentUser.getRole().equals("voter")) {
+                try {
+                    new LandingPageController().showLandingPage(primaryStage, userSession);
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

@@ -467,7 +467,17 @@ public class AdminLandingPageController {
                 try {
                     PollService pollService = new PollService();
                     pollService.deletePoll(poll.getPoll_ID());
+
                     showAdminLandingPage(primaryStage, userSession);
+
+                    // Explicitly reselect the "Delete" tab after the page reload
+                    Platform.runLater(() -> {
+                        tabPane.getSelectionModel().select(tabPane.getTabs().stream()
+                                .filter(tab -> tab.getText().equals("Delete"))
+                                .findFirst()
+                                .orElseThrow(() -> new RuntimeException("Delete Tab not found")));
+                    });
+
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -526,7 +536,17 @@ public class AdminLandingPageController {
                     try {
                         PollService pollService = new PollService();
                         pollService.deletePoll(poll.getPoll_ID());
+
                         showAdminLandingPage(primaryStage, userSession);
+
+                        // Explicitly reselect the "Delete" tab after the page reload
+                        Platform.runLater(() -> {
+                            tabPane.getSelectionModel().select(tabPane.getTabs().stream()
+                                    .filter(tab -> tab.getText().equals("Delete"))
+                                    .findFirst()
+                                    .orElseThrow(() -> new RuntimeException("Delete Tab not found")));
+                        });
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
