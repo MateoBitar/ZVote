@@ -1,24 +1,31 @@
-package com.example.zvote.Connection;
+package com.example.zvote.Connection;  // Package declaration, specifies the namespace
 
-import java.sql.*;
+
+import java.sql.*;  // Import necessary SQL classes
+
 
 public class DBHandler {
-    private static final String URL = "jdbc:mysql://192.168.1.4:3307/zvote";
-    private static final String USER = "marco";
-    private static final String PASSWORD = "Marco.Bitar21";
+    private static final String URL = "jdbc:mysql://192.168.1.4:3307/zvote";  // Database URL
+    private static final String USER = "marco";  // Database username
+    private static final String PASSWORD = "Marco.Bitar21";  // Database password
 
-    private Connection connection;
+    private Connection connection;  // Persistent database connection instance
+
 
     // Constructor to establish a persistent connection
     public DBHandler() {
         connect();
     }
 
+
+    // Method to establish the database connection
     private void connect() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // Load MySQL driver once
+            // Load the MySQL JDBC Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
             System.out.println("Driver loaded successfully.");
 
+            // Establish the database connection
             connection = DriverManager.getConnection(URL, USER, PASSWORD);
             System.out.println("Database connected successfully.");
 
@@ -32,7 +39,8 @@ public class DBHandler {
         }
     }
 
-    // Getter for connection
+
+    // Getter method to retrieve the database connection
     public Connection getConnection() {
         if (connection == null) {
             System.out.println("Connection is null. Attempting to reconnect.");
@@ -41,12 +49,13 @@ public class DBHandler {
         return connection;
     }
 
-    // Method to execute SELECT queries (Safe ResultSet handling)
+
+    // Method to execute SELECT queries safely, returning a ResultSet
     public ResultSet executeQuery(String query) {
         try {
-            PreparedStatement stmt = connection.prepareStatement(query);
+            PreparedStatement stmt = connection.prepareStatement(query);  // Create a prepared statement
             if (stmt != null) {
-                return stmt.executeQuery(query);
+                return stmt.executeQuery(query);  // Execute the query
             } else {
                 System.out.println("Statement is null. Cannot execute query.");
             }
@@ -57,11 +66,12 @@ public class DBHandler {
         return null;
     }
 
-    // Method to execute INSERT, UPDATE, DELETE queries
+
+    // Method to execute INSERT, UPDATE, or DELETE queries
     public int executeUpdate(String query) {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             if (stmt != null) {
-                return stmt.executeUpdate(query);
+                return stmt.executeUpdate(query);  // Execute the update
             } else {
                 System.out.println("Statement is null. Cannot execute update.");
             }
@@ -72,11 +82,12 @@ public class DBHandler {
         return 0;
     }
 
-    // Close the connection when the app exits
+
+    // Method to close the database connection when the application exits
     public void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {
-                connection.close();
+                connection.close();  // Close the connection
                 System.out.println("Database connection closed.");
             }
         } catch (SQLException e) {
