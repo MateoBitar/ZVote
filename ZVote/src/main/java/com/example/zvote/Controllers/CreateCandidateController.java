@@ -56,9 +56,8 @@ public class CreateCandidateController {
         backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
         backButton.setOnAction(event -> {
             try {
-                AdminLandingPageController adminLandingPageController = new AdminLandingPageController();
                 UserController.userSession.put("user", user);
-                adminLandingPageController.showAdminLandingPage(primaryStage, UserController.userSession);
+                new CandidatesController().showCandidatesPage(primaryStage, UserController.userSession);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -151,6 +150,7 @@ public class CreateCandidateController {
                 // Show a success alert
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Candidate created successfully!");
                 successAlert.showAndWait();
+                new CandidatesController().showCandidatesPage(primaryStage, UserController.userSession);
             } catch (IOException e) {
                 // Handle photo file reading issues
                 Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while reading the photo file: " + e.getMessage());

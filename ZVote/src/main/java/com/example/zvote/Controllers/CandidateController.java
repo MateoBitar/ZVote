@@ -4,10 +4,12 @@ import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.ResultModel;
 import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.ResultService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -60,6 +62,7 @@ public class CandidateController {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         tableView.setPrefHeight(600);
+
 
         // Map to store CheckBoxes associated with each CandidateModel
         Map<CandidateModel, CheckBox> checkBoxMap = new HashMap<>();
