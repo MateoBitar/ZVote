@@ -86,6 +86,21 @@ public class ResultService {
         return results;
     }
 
+    // Fetch all results of a poll
+    public List<ResultModel> getResultsByCandidateID(int candidate_ID) throws SQLException {
+        String query = "SELECT * FROM result WHERE candidate_ID = ?";
+        List<ResultModel> results = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, candidate_ID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    results.add(ResultMapper.mapResultSetToResult(resultSet));
+                }
+            }
+        }
+        return results;
+    }
+
     // Update a result
     public void updateResult(ResultModel result) throws SQLException {
         String query = "UPDATE result SET registration_date = ?, votes_casted = ?, withdrawal_date = ?" +
