@@ -5,15 +5,13 @@ import java.util.Date;
 public class ResultModel {
     private int result_ID;
     private Date registration_date;
-    private double fees_paid;
     private int votes_casted;
     private Date withdrawal_date;
     private int candidate_ID;
     private int poll_ID;
 
-    public ResultModel(Date registration_date, double fees_paid, int candidate_ID, int poll_ID) {
+    public ResultModel(Date registration_date, int candidate_ID, int poll_ID) {
         setRegistration_date(registration_date);
-        setFees_paid(fees_paid);
         setWithdrawal_date(null);
         setCandidate_ID(candidate_ID);
         setPoll_ID(poll_ID);
@@ -33,14 +31,6 @@ public class ResultModel {
 
     public void setRegistration_date(Date registration_date) {
         this.registration_date = registration_date;
-    }
-
-    public double getFees_paid() {
-        return fees_paid;
-    }
-
-    public void setFees_paid(double fees_paid) {
-        this.fees_paid = fees_paid;
     }
 
     public int getVotes_casted() {
@@ -79,7 +69,6 @@ public class ResultModel {
     public String toString() {
         return "result_ID = " + result_ID +
                 ", registration_date = " + registration_date +
-                ", fees_paid = " + fees_paid +
                 ", votes_casted = " + votes_casted +
                 ", withdrawal_date = " + withdrawal_date +
                 ", candidate_ID = " + candidate_ID +

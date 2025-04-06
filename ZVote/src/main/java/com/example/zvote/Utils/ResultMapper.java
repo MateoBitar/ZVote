@@ -9,7 +9,6 @@ public class ResultMapper {
     public static ResultModel mapResultSetToResult(ResultSet rs) throws SQLException {
         ResultModel result = new ResultModel(
                 rs.getTimestamp("registration_date"),
-                rs.getDouble("fees_paid"),
                 rs.getInt("candidate_ID"),
                 rs.getInt("poll_ID")
         );

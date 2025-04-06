@@ -1,15 +1,12 @@
 package com.example.zvote.Controllers;
 
+import com.example.zvote.Main;
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
 import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -69,33 +66,52 @@ public class AdminLandingPageController {
         pollIcon.setTranslateX(150);
 
 
-        // Profile Button
-        Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
-        profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
+        // Profile Menu Button
+        MenuButton profileMenu = new MenuButton("\uD83D\uDC64"); // Unicode for user icon
+        profileMenu.setStyle("-fx-font-family: Arial; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand;");
-        profileIcon.setPrefSize(70, 30);
-        profileIcon.setTranslateX(150);
-        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
-        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
-        profileIcon.setOnAction(e -> {
+        profileMenu.setPrefSize(75,30);
+        profileMenu.setTranslateX(200);
+        profileMenu.setOnMouseEntered(e -> profileMenu.setStyle(profileMenu.getStyle().replace(
+                "-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileMenu.setOnMouseExited(e -> profileMenu.setStyle(profileMenu.getStyle().replace(
+                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+
+        // Menu Items
+        MenuItem userInfoItem = new MenuItem("User Info");
+        userInfoItem.setOnAction(e -> {
             UserController userController = new UserController();
             userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
         });
 
+        MenuItem logoutItem = new MenuItem("Log Out");
+        logoutItem.setOnAction(e -> {
+            primaryStage.close();
+            new Main().start(new Stage());
+        });
+
+        MenuItem logoffItem = new MenuItem("Close Application");
+        logoffItem.setOnAction(e -> {
+            primaryStage.close();
+        });
+
+        profileMenu.getItems().addAll(userInfoItem, logoutItem, logoffItem);
+
 
         pollIcon.setFocusTraversable(false);
-        profileIcon.setFocusTraversable(false);
+        profileMenu.setFocusTraversable(false);
 
 
         // MenuIcon
         Label menuIcon = new Label("\u283F"); // Unicode for menu icon
         menuIcon.setStyle("-fx-font-size: 24px; -fx-padding: 10px; -fx-cursor: hand;");
-        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileIcon));
+        menuIcon.setOnMouseClicked(e -> animateMenu(pollIcon, profileMenu));
 
 
         // Menu
         HBox menu = new HBox(-10);
-        menu.getChildren().addAll(pollIcon, profileIcon, menuIcon);
+        menu.getChildren().addAll(pollIcon, profileMenu, menuIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
 
 
@@ -262,7 +278,7 @@ public class AdminLandingPageController {
 
     private static boolean isMenuOpen = false;
 
-    static void animateMenu(Button poll, Button profile) {
+    static void animateMenu(Button poll, MenuButton profile) {
         isMenuOpen = !isMenuOpen; // Toggle state
         double targetX = isMenuOpen ? 0 : 150; // Move in or out
         animateItem(poll, targetX);
@@ -274,6 +290,13 @@ public class AdminLandingPageController {
         transition.setToX(targetX);
         transition.play();
     }
+
+    private static void animateItem(MenuButton item, double targetX) {
+        TranslateTransition transition = new TranslateTransition(Duration.millis(300), item);
+        transition.setToX(targetX);
+        transition.play();
+    }
+
 
     private List<PollModel> filterPolls(List<PollModel> allPolls, String query) {
         return allPolls.stream()

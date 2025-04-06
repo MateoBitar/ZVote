@@ -54,7 +54,7 @@ public class CandidateController {
                 CheckBox checkBox = checkBoxMap.get(candidate);
                 if (checkBox != null && checkBox.isSelected()) {
                     try {
-                        resultService.addResult(new ResultModel(new Date(), 0.00, candidate.getCandidate_ID(), pollId));
+                        resultService.addResult(new ResultModel(new Date(), candidate.getCandidate_ID(), pollId));
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

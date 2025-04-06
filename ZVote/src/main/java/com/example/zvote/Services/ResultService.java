@@ -20,14 +20,13 @@ public class ResultService {
 
     // Add a result for candidate
     public void addResult(ResultModel result) throws SQLException {
-        String insertQuery = "INSERT INTO result (registration_date, fees_paid, votes_casted, withdrawal_date," +
-                " candidate_ID, poll_ID) VALUES (?, ?, ?, null, ?, ?)";
+        String insertQuery = "INSERT INTO result (registration_date, votes_casted, withdrawal_date," +
+                " candidate_ID, poll_ID) VALUES (?, ?, null, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
             statement.setTimestamp(1, new Timestamp(result.getRegistration_date().getTime()));
-            statement.setDouble(2, result.getFees_paid());
-            statement.setInt(3, result.getVotes_casted());
-            statement.setInt(4, result.getCandidate_ID());
-            statement.setInt(5, result.getPoll_ID());
+            statement.setInt(2, result.getVotes_casted());
+            statement.setInt(3, result.getCandidate_ID());
+            statement.setInt(4, result.getPoll_ID());
             statement.executeUpdate();
         }
     }
@@ -89,18 +88,17 @@ public class ResultService {
 
     // Update a result
     public void updateResult(ResultModel result) throws SQLException {
-        String query = "UPDATE result SET registration_date = ?, fees_paid = ?, votes_casted = ?, withdrawal_date = ?" +
+        String query = "UPDATE result SET registration_date = ?, votes_casted = ?, withdrawal_date = ?" +
                 " WHERE result_ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setTimestamp(1, new Timestamp(result.getRegistration_date().getTime()));
-            statement.setDouble(2, result.getFees_paid());
-            statement.setInt(3, result.getVotes_casted());
+            statement.setInt(2, result.getVotes_casted());
             if (result.getWithdrawal_date() != null) {
-                statement.setTimestamp(4, new Timestamp(result.getWithdrawal_date().getTime()));
+                statement.setTimestamp(3, new Timestamp(result.getWithdrawal_date().getTime()));
             } else {
-                statement.setNull(4, Types.TIMESTAMP);
+                statement.setNull(3, Types.TIMESTAMP);
             }
-            statement.setInt(5, result.getResult_ID());
+            statement.setInt(4, result.getResult_ID());
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated == 0) {
                 throw new SQLException("Result not found.");
