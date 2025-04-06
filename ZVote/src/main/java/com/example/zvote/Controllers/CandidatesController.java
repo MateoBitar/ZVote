@@ -3,7 +3,6 @@ package com.example.zvote.Controllers;
 import com.example.zvote.Main;
 import com.example.zvote.Models.*;
 import com.example.zvote.Services.CandidateService;
-import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
 import com.example.zvote.Services.VoteService;
 import javafx.animation.TranslateTransition;

@@ -17,13 +17,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-
 import static com.example.zvote.Controllers.LandingPageController.animateMenu;
 
 public class UserController {
@@ -176,7 +172,7 @@ public class UserController {
 
         Button updateButton = new Button("Update Info");
         updateButton.setStyle("-fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 50");
+                " -fx-font-weight: bold; -fx-background-radius: 50; -fx-cursor: hand");
         updateButton.setPrefWidth(200);
         updateButton.setPadding(new Insets(5));
         updateButton.setOnMouseEntered(e -> updateButton.setStyle(updateButton.getStyle().replace(
@@ -243,13 +239,13 @@ public class UserController {
 
         Button submitButton = new Button("Save Changes");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
-                " -fx-border-radius: 10px; -fx-font-size: 15px;");
+                " -fx-border-radius: 10px; -fx-font-size: 15px; -fx-cursor: hand");
         submitButton.setPrefWidth(120);
         submitButton.setPrefHeight(38);
 
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
-                " -fx-border-radius: 10px; -fx-font-size: 15px");
+                " -fx-border-radius: 10px; -fx-font-size: 15px; -fx-cursor: hand");
         backButton.setPrefWidth(120);
         backButton.setPrefHeight(35);
 

@@ -4,25 +4,20 @@ import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.ResultModel;
 import com.example.zvote.Services.CandidateService;
 import com.example.zvote.Services.ResultService;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import java.util.*;
 
 public class CandidateController {
@@ -88,7 +83,8 @@ public class CandidateController {
 
         // Submit Button
         Button submitButton = new Button("Submit");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         submitButton.setOnAction(event -> {
             // Create ResultModel objects for selected candidates
             for (CandidateModel candidate : candidates) {

@@ -19,14 +19,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Map;
 
 public class PollController {
     public void showPollDetails(Stage primaryStage, PollModel poll, UserModel user) throws Exception {
@@ -55,7 +52,8 @@ public class PollController {
 
         // Back Button on the right
         Button backButton = new Button("Back");
-        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                " -fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
                 LandingPageController landingPageController = new LandingPageController();
@@ -143,7 +141,8 @@ public class PollController {
 
         // Vote Button
         Button voteButton = new Button("Vote");
-        voteButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 18px;");
+        voteButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 18px;" +
+                "-fx-cursor: hand");
         voteButton.setOnAction(e -> {
             try {
                 showVotingSection(primaryStage, poll, user);
@@ -209,7 +208,8 @@ public class PollController {
 
         // Back Button on the right
         Button backButton = new Button("Back");
-        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
                 showPollDetails(primaryStage, poll, user); // Navigate back to poll details
@@ -239,13 +239,14 @@ public class PollController {
             RadioButton candidateButton = new RadioButton(candidate.getName());
             candidateButton.setToggleGroup(candidatesGroup);
             candidateButton.setUserData(candidate.getCandidate_ID()); // Store candidate ID
-            candidateButton.setStyle("-fx-font-size: 20px;");
+            candidateButton.setStyle("-fx-font-size: 20px; -fx-cursor: hand");
             candidatesSection.getChildren().add(candidateButton);
         }
 
         // Submit Button
         Button submitButton = new Button("Submit Vote");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         submitButton.setOnAction(event -> {
             RadioButton selectedCandidate = (RadioButton) candidatesGroup.getSelectedToggle();
             if (selectedCandidate == null) {

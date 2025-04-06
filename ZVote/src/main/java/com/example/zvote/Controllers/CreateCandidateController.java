@@ -6,7 +6,6 @@ import com.example.zvote.Services.CandidateService;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
@@ -17,14 +16,10 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.sql.Date;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.time.ZoneId;
 
 public class CreateCandidateController {
     public void showCreateCandidateForm(Stage primaryStage, UserModel user) throws Exception {
@@ -53,7 +48,8 @@ public class CreateCandidateController {
 
         // Back Button on the right
         Button backButton = new Button("Back");
-        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
                 UserController.userSession.put("user", user);
@@ -105,7 +101,8 @@ public class CreateCandidateController {
         // FileChooser for Photo
         FileChooser fileChooser = new FileChooser();
         Button uploadPhotoButton = new Button("Upload Candidate Photo");
-        uploadPhotoButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 30px; -fx-background-radius: 30px; -fx-padding: 5px 10px;");
+        uploadPhotoButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 30px;" +
+                " -fx-background-radius: 30px; -fx-padding: 5px 10px; -fx-cursor: hand");
         final File[] selectedPhoto = {null}; // To store the chosen photo
         uploadPhotoButton.setOnAction(event -> {
             File file = fileChooser.showOpenDialog(primaryStage);
@@ -119,7 +116,8 @@ public class CreateCandidateController {
         createCandidateForm.add(uploadPhotoButton, 0, 3);
 
         Button submitButton = new Button("Create Candidate");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 15px;");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 10px;" +
+                " -fx-font-size: 15px; -fx-cursor: hand");
         submitButton.setPrefWidth(160);
         submitButton.setPrefHeight(38);
         createCandidateForm.add(submitButton, 0, 4);

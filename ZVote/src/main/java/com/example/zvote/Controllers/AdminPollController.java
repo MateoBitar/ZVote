@@ -15,8 +15,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -49,7 +47,8 @@ public class AdminPollController {
 
         // Back Button on the right
         Button backButton = new Button("Back");
-        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
                 AdminLandingPageController adminLandingPageController = new AdminLandingPageController();
@@ -142,7 +141,7 @@ public class AdminPollController {
 
         Button submitButton = new Button("Choose Candidates");
         submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
-                " -fx-border-radius: 10px; -fx-font-size: 15px;");
+                " -fx-border-radius: 10px; -fx-font-size: 15px; -fx-cursor: hand");
         submitButton.setPrefWidth(160);
         submitButton.setPrefHeight(38);
         submitButton.setOnAction(event -> {

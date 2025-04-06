@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.*;
 import javafx.stage.*;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.util.HashMap;
@@ -163,7 +162,8 @@ public class SignInController {
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
                         "-fx-background-radius: 30px; " +
-                        "-fx-padding: 5px 10px;"
+                        "-fx-padding: 5px 10px;" +
+                        "-fx-cursor: hand"
         );
         final File[] selectedPhoto = {null}; // To store the chosen photo
         uploadPhotoButton.setOnAction(event -> {
@@ -185,7 +185,8 @@ public class SignInController {
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
                         "-fx-background-radius: 30px; " +
-                        "-fx-padding: 5px 10px;"
+                        "-fx-padding: 5px 10px;" +
+                        "-fx-cursor: hand"
         );
         SSubmitButton.setOnAction(event -> {
             // Validate inputs
@@ -239,7 +240,8 @@ public class SignInController {
                         "-fx-font-weight: bold; " +
                         "-fx-border-radius: 30px; " +
                         "-fx-background-radius: 30px; " +
-                        "-fx-padding: 5px 10px;"
+                        "-fx-padding: 5px 10px;" +
+                        "-fx-cursor: hand"
         );
         LSubmitButton.setOnAction(event -> {
                 // Validate inputs
@@ -303,7 +305,8 @@ public class SignInController {
                         "-fx-text-fill: black; " +
                         "-fx-font-weight: bold; " +
                         "-fx-padding: 0px 10px;" +
-                        "-fx-font-size: 15px"
+                        "-fx-font-size: 15px;" +
+                        "-fx-cursor: hand"
         );
         backButton.setOnAction(event -> {
             signInStage.close();

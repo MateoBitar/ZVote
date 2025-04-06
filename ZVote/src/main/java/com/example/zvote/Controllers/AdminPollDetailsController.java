@@ -3,7 +3,6 @@ package com.example.zvote.Controllers;
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.PollModel;
 import com.example.zvote.Services.ResultService;
-import com.example.zvote.Services.VoteService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -17,7 +16,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -51,7 +49,8 @@ public class AdminPollDetailsController {
 
         // Back Button on the right
         Button backButton = new Button("Back");
-        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;");
+        backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
+                "-fx-cursor: hand");
         backButton.setOnAction(event -> {
             try {
                 AdminLandingPageController adminLandingPageController = new AdminLandingPageController();

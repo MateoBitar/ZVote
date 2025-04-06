@@ -44,7 +44,7 @@ public class Main extends Application {
         // About Button
         Button about = new Button("About");
         about.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20");
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         about.setPrefHeight(30);
         about.setPrefWidth(90);
         // Add hover effects for buttons
@@ -57,7 +57,7 @@ public class Main extends Application {
         // Contact a Button
         Button contact = new Button("Contact");
         contact.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20");
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         contact.setPrefHeight(30);
         contact.setPrefWidth(100);
         contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace(
@@ -69,7 +69,7 @@ public class Main extends Application {
         // Profile Button
         Button profileIcon = new Button("\uD83D\uDC64"); // Unicode for user icon
         profileIcon.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20");
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         profileIcon.setPrefHeight(30);
         profileIcon.setPrefWidth(70);
         profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace(
@@ -109,7 +109,7 @@ public class Main extends Application {
 
         Button voteNow = new Button("Vote Now");
         voteNow.setStyle("-fx-font-family: Onyx; -fx-font-size: 40; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 50");
+                " -fx-font-weight: bold; -fx-background-radius: 50; -fx-cursor: hand");
         voteNow.setPrefWidth(200);
         voteNow.setPadding(new Insets(3, 50, 3, 50));
 

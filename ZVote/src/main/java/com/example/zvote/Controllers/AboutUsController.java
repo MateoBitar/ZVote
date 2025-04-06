@@ -62,7 +62,7 @@ public class AboutUsController {
         // Back Button
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
-                " -fx-font-weight: bold; -fx-background-radius: 20");
+                " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         backButton.setPrefHeight(30);
         backButton.setPrefWidth(100);
         backButton.setOnMouseEntered(e -> backButton.setStyle(backButton.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
