@@ -55,6 +55,31 @@ public class VoteService {
         return votes;
     }
 
+    public List<VoteModel> getVotesByPollID(int poll_ID) throws SQLException {
+        String query = "SELECT * FROM votes WHERE poll_ID = ?";
+        List<VoteModel> votes = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, poll_ID);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    votes.add(VoteMapper.mapResultSetToVote(resultSet)); // Map resultSet to VoteModel objects
+                }
+            }
+        }
+        return votes;
+    }
+
+    public void deleteVote(int user_ID, int poll_ID) throws SQLException {
+        String query = "DELETE FROM votes WHERE user_ID = ? AND poll_ID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, user_ID);
+            statement.setInt(2, poll_ID);
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted == 0) {
+                throw new IllegalArgumentException("No vote found with these IDs.");
+            }
+        }
+    }
     public boolean hasUserVoted(int userID, int pollID) throws SQLException {
         String query = "SELECT * FROM votes WHERE user_ID = ? AND poll_ID = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {

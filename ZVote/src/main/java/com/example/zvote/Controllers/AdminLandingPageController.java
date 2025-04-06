@@ -1,12 +1,12 @@
 package com.example.zvote.Controllers;
 
 import com.example.zvote.Main;
-import com.example.zvote.Models.CandidateModel;
-import com.example.zvote.Models.PollModel;
-import com.example.zvote.Models.UserModel;
+import com.example.zvote.Models.*;
 import com.example.zvote.Services.PollService;
 import com.example.zvote.Services.ResultService;
+import com.example.zvote.Services.VoteService;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -466,8 +466,24 @@ public class AdminLandingPageController {
             pollButton.setOnAction(event -> {
                 try {
                     PollService pollService = new PollService();
+                    VoteService voteService = new VoteService();
+
+                    // Step 1: Fetch and delete all results associated with the poll
+                    List<ResultModel> results = resultService.getResultsByPollID(poll.getPoll_ID());
+                    for (ResultModel result : results) {
+                        resultService.deleteResult(result.getResult_ID());
+                    }
+
+                    // Step 2: Fetch and delete all votes associated with the poll
+                    List<VoteModel> votes = voteService.getVotesByPollID(poll.getPoll_ID());
+                    for (VoteModel vote : votes) {
+                        voteService.deleteVote(vote.getUser_ID(), vote.getPoll_ID());
+                    }
+
+                    // Step 3: Delete the poll itself
                     pollService.deletePoll(poll.getPoll_ID());
 
+                    // Reload the admin landing page
                     showAdminLandingPage(primaryStage, userSession);
 
                     // Explicitly reselect the "Delete" tab after the page reload
@@ -477,7 +493,6 @@ public class AdminLandingPageController {
                                 .findFirst()
                                 .orElseThrow(() -> new RuntimeException("Delete Tab not found")));
                     });
-
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -535,8 +550,24 @@ public class AdminLandingPageController {
                 pollButton.setOnAction(event -> {
                     try {
                         PollService pollService = new PollService();
+                        VoteService voteService = new VoteService();
+
+                        // Step 1: Fetch and delete all results associated with the poll
+                        List<ResultModel> results = resultService.getResultsByPollID(poll.getPoll_ID());
+                        for (ResultModel result : results) {
+                            resultService.deleteResult(result.getResult_ID());
+                        }
+
+                        // Step 2: Fetch and delete all votes associated with the poll
+                        List<VoteModel> votes = voteService.getVotesByPollID(poll.getPoll_ID());
+                        for (VoteModel vote : votes) {
+                            voteService.deleteVote(vote.getUser_ID(), vote.getPoll_ID());
+                        }
+
+                        // Step 3: Delete the poll itself
                         pollService.deletePoll(poll.getPoll_ID());
 
+                        // Reload the admin landing page
                         showAdminLandingPage(primaryStage, userSession);
 
                         // Explicitly reselect the "Delete" tab after the page reload
@@ -546,7 +577,6 @@ public class AdminLandingPageController {
                                     .findFirst()
                                     .orElseThrow(() -> new RuntimeException("Delete Tab not found")));
                         });
-
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

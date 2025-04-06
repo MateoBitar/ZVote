@@ -17,6 +17,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 public class AdminPollController {
@@ -144,10 +145,32 @@ public class AdminPollController {
         submitButton.setPrefWidth(120);
         submitButton.setPrefHeight(38);
         submitButton.setOnAction(event -> {
+            LocalDate startDate = startdatePicker.getValue();
+            LocalDate endDate = endDatePicker.getValue();
+
+            if (startDate == null || endDate == null) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Missing Dates");
+                alert.setContentText("Please make sure to select both start and end dates.");
+                alert.showAndWait();
+                return;
+            }
+
+            if (endDate.isBefore(startDate)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Date Error");
+                alert.setHeaderText("Invalid Dates");
+                alert.setContentText("The end date cannot be before the start date. Please correct it.");
+                alert.showAndWait();
+                return;
+            }
+
             PollModel newPoll = new PollModel(pollTitleField.getText(), pollDescriptionField.getText(),
-                    Date.from((startdatePicker.getValue()).atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                            Date.from((endDatePicker.getValue()).atStartOfDay(ZoneId.systemDefault()).toInstant()),
-                            user.getUser_ID());
+                    Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                    user.getUser_ID());
+
             try {
                 newPoll.setPoll_ID(new PollService().addPoll(newPoll));
                 new CandidateController().displayCandidates(primaryStage, newPoll.getPoll_ID());
