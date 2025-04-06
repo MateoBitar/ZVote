@@ -1,8 +1,11 @@
-package com.example.zvote;
+package com.example.zvote;  // Package declaration, specifies the namespace
 
+
+// Importing necessary controllers
 import com.example.zvote.Controllers.AboutUsController;
 import com.example.zvote.Controllers.ContactUsController;
 import com.example.zvote.Controllers.SignInController;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,21 +22,22 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+
 public class Main extends Application {
+
     @Override
     public void start(Stage primaryStage) {
+
         // Top Bar
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(10, 10, 10, 40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
 
-        // Create a shadow effect
+        // Create and apply shadow effect
         DropShadow shadow = new DropShadow();
         shadow.setRadius(5);
         shadow.setOffsetY(2);
         shadow.setColor(Color.LIGHTGRAY);
-
-        // Apply shadow to topBar
         topBar.setEffect(shadow);
 
         Label logo = new Label("ZVote");
@@ -47,23 +51,22 @@ public class Main extends Application {
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         about.setPrefHeight(30);
         about.setPrefWidth(90);
-        // Add hover effects for buttons
-        about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace(
-                "-fx-text-fill: black;", "-fx-text-fill: white;")));
-        about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace(
-                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+        // Add hover effect to About button
+        about.setOnMouseEntered(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        about.setOnMouseExited(e -> about.setStyle(about.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
-        // Contact a Button
+        // Contact Button
         Button contact = new Button("Contact");
         contact.setStyle("-fx-font-family: Onyx; -fx-font-size: 30; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         contact.setPrefHeight(30);
         contact.setPrefWidth(100);
-        contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace(
-                "-fx-text-fill: black;", "-fx-text-fill: white;")));
-        contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace(
-                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+        // Add hover effect to Contact button
+        contact.setOnMouseEntered(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        contact.setOnMouseExited(e -> contact.setStyle(contact.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
 
         // Profile Button
@@ -72,16 +75,17 @@ public class Main extends Application {
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         profileIcon.setPrefHeight(30);
         profileIcon.setPrefWidth(70);
-        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace(
-                "-fx-text-fill: black;", "-fx-text-fill: white;")));
-        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace(
-                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+        // Add hover effect to Profile button
+        profileIcon.setOnMouseEntered(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        profileIcon.setOnMouseExited(e -> profileIcon.setStyle(profileIcon.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         menu.getChildren().addAll(about, contact, profileIcon);
         menu.setAlignment(Pos.CENTER_RIGHT);
 
         HBox.setHgrow(menu, Priority.ALWAYS);
         topBar.getChildren().addAll(logo, menu);
+
 
         // Background Image
         StackPane content = new StackPane();
@@ -90,13 +94,15 @@ public class Main extends Application {
         ImageView votingImage = new ImageView(new Image(getClass().getResource("/images/Main Page.png").toExternalForm()));
         votingImage.setPreserveRatio(false);
 
-        // Make the image resize with the window
+        // Bind image dimensions to window size
         votingImage.fitWidthProperty().bind(content.widthProperty());
         votingImage.fitHeightProperty().bind(content.heightProperty());
+
 
         // Text Section
         VBox textSection = new VBox(20);
         textSection.setPadding(new Insets(50, 50, 250, 1100));
+
         Label title = new Label("ZVote");
         title.setFont(Font.font("Onyx", FontWeight.EXTRA_BOLD, 150));
 
@@ -113,10 +119,9 @@ public class Main extends Application {
         voteNow.setPrefWidth(200);
         voteNow.setPadding(new Insets(3, 50, 3, 50));
 
-        voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace(
-                "-fx-text-fill: black;", "-fx-text-fill: white;")));
-        voteNow.setOnMouseExited(e -> voteNow.setStyle(voteNow.getStyle().replace(
-                "-fx-text-fill: white;", "-fx-text-fill: black;")));
+        // Add hover effect to Vote Now button
+        voteNow.setOnMouseEntered(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
+        voteNow.setOnMouseExited(e -> voteNow.setStyle(voteNow.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
 
         textSection.getChildren().addAll(title, subtitle, tagline, voteNow);
         textSection.setAlignment(Pos.CENTER);
@@ -124,8 +129,8 @@ public class Main extends Application {
         content.getChildren().addAll(votingImage, textSection);
         StackPane.setAlignment(textSection, Pos.CENTER_RIGHT);
 
-        // Ensure content grows in VBox
         VBox.setVgrow(content, Priority.ALWAYS);
+
 
         // Main Layout
         VBox mainLayout = new VBox(2);
@@ -137,19 +142,28 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
 
+
+        // About button functionality
         about.setOnAction(e -> {
             AboutUsController aboutUsController = new AboutUsController(primaryStage, scene);
             aboutUsController.showAboutUsScene();
         });
+
+
+        // Contact button functionality
         contact.setOnAction(e -> {
             ContactUsController contactUsController = new ContactUsController(primaryStage, scene);
             contactUsController.showContactUsScene();
         });
 
+
+        // Profile button functionality
         profileIcon.setOnAction(e -> {
             SignInController.showSignInWindow(primaryStage);
         });
 
+
+        // Vote Now button functionality
         voteNow.setOnAction(e -> {
             SignInController.showSignInWindow(primaryStage);
         });
