@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -53,7 +54,10 @@ public class CandidateController {
                 new CandidateService().getAllCandidates());
 
         TableView<CandidateModel> tableView = new TableView<>();
+        tableView.setStyle("-fx-background-color: #C8F0FF; -fx-font-size: 16px;");
         tableView.setItems(candidates);
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        VBox.setVgrow(tableView, Priority.ALWAYS); // Ensures the table grows to fill space
 
         // Map to store CheckBoxes associated with each CandidateModel
         Map<CandidateModel, CheckBox> checkBoxMap = new HashMap<>();
@@ -62,6 +66,8 @@ public class CandidateController {
         TableColumn<CandidateModel, String> nameColumn = new TableColumn<>("Candidate Name");
         nameColumn.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getName()));
+        nameColumn.setStyle("-fx-alignment: CENTER; -fx-text-fill: black; -fx-font-weight: bold;");
+
 
         // CheckBox Column for selection
         TableColumn<CandidateModel, CheckBox> checkBoxColumn = new TableColumn<>("Select");
@@ -70,6 +76,7 @@ public class CandidateController {
             checkBoxMap.put(data.getValue(), checkBox); // Associate the CheckBox with the CandidateModel
             return new javafx.beans.property.SimpleObjectProperty<>(checkBox);
         });
+        checkBoxColumn.setStyle("-fx-alignment: CENTER; -fx-text-fill: black; -fx-font-weight: bold;");
 
         tableView.getColumns().addAll(nameColumn, checkBoxColumn);
 
@@ -100,14 +107,15 @@ public class CandidateController {
             }
         });
 
-        VBox vBox = new VBox();
-        vBox.setSpacing(20);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setContent(tableView);
         scrollPane.setFitToWidth(true); // Ensures the table width matches the ScrollPane's width
         scrollPane.setStyle("-fx-background: transparent;");
 
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(20);
         vBox.getChildren().addAll(topBar, label, scrollPane, submitButton);
         vBox.setAlignment(Pos.TOP_CENTER);
         vBox.setStyle("-fx-background-color: white;");
