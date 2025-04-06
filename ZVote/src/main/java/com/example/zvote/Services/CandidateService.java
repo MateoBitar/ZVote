@@ -16,14 +16,26 @@ public class CandidateService {
         connection = dbHandler.getConnection();
     }
 
-    // Add a candidate
+    // Add candidate
     public void addCandidate(CandidateModel candidate) throws SQLException {
+        // Check if the name already exists
+        String selectQuery = "SELECT COUNT(*) FROM candidates WHERE name = ?";
+        try (PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
+            selectStatement.setString(1, candidate.getName());
+            try (ResultSet resultSet = selectStatement.executeQuery()) {
+                if (resultSet.next() && resultSet.getInt(1) > 0) {
+                    throw new SQLException("A candidate with the same name already exists.");
+                }
+            }
+        }
+
+        // Insert the new candidate if the name is unique
         String insertQuery = "INSERT INTO candidates (name, photo, bio) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-            statement.setString(1, candidate.getName());
-            statement.setBytes(2, candidate.getPhoto());
-            statement.setString(3, candidate.getBio());
-            statement.executeUpdate();
+        try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+            insertStatement.setString(1, candidate.getName());
+            insertStatement.setBytes(2, candidate.getPhoto());
+            insertStatement.setString(3, candidate.getBio());
+            insertStatement.executeUpdate();
         }
     }
 
@@ -105,5 +117,18 @@ public class CandidateService {
                 throw new SQLException("No candidate found with this ID.");
             }
         }
+    }
+
+    public boolean isNameTaken(String name) throws SQLException {
+        String query = "SELECT COUNT(*) FROM candidates WHERE name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1) > 0; // Returns true if name exists
+                }
+            }
+        }
+        return false;
     }
 }
