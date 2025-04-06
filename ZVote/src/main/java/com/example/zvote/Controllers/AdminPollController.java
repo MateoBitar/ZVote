@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -147,12 +148,14 @@ public class AdminPollController {
         submitButton.setOnAction(event -> {
             LocalDate startDate = startdatePicker.getValue();
             LocalDate endDate = endDatePicker.getValue();
+            LocalDate today = LocalDate.now(); // Get the current date
 
-            if (startDate == null || endDate == null) {
+            // Validate if all fields are filled
+            if (pollTitleField.getText().isBlank() || pollDescriptionField.getText().isBlank() || startDate == null || endDate == null) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Missing Dates");
-                alert.setContentText("Please make sure to select both start and end dates.");
+                alert.setTitle("Missing Fields");
+                alert.setHeaderText("Incomplete Form");
+                alert.setContentText("Please ensure all fields are filled.");
                 alert.showAndWait();
                 return;
             }
@@ -166,6 +169,15 @@ public class AdminPollController {
                 return;
             }
 
+            if (endDate.isBefore(today)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Date Error");
+                alert.setHeaderText("End Date in the Past");
+                alert.setContentText("The end date cannot be in the past. Please select a valid date.");
+                alert.showAndWait();
+                return;
+            }
+
             PollModel newPoll = new PollModel(pollTitleField.getText(), pollDescriptionField.getText(),
                     Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
                     Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant()),
@@ -175,7 +187,11 @@ public class AdminPollController {
                 newPoll.setPoll_ID(new PollService().addPoll(newPoll));
                 new CandidateController().displayCandidates(primaryStage, newPoll.getPoll_ID());
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Title Error");
+                alert.setHeaderText("Title Unavailable");
+                alert.setContentText("Title already exists. Choose a different title.");
+                alert.showAndWait();
             }
         });
         createPollForm.add(submitButton, 0, 5);
@@ -191,7 +207,6 @@ public class AdminPollController {
         // Scene setup
         Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
         primaryStage.show();
     }
 }
