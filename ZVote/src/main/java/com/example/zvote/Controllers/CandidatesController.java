@@ -400,7 +400,6 @@ public class CandidatesController {
 
 
         Button deleteCandidateButton = new Button("Delete Candidate");
-        deleteCandidateButton.setText("Delete Poll");
         deleteCandidateButton.setGraphic(deleteImageViewButton);
         deleteCandidateButton.setStyle(
                 "-fx-background-color: red; " +
