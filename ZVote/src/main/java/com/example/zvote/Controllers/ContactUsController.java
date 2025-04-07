@@ -1,5 +1,7 @@
-package com.example.zvote.Controllers;
+package com.example.zvote.Controllers;  // Package declaration, specifies the namespace
 
+
+// Importing necessary classes for UI and layout functionality
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,20 +14,27 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+
 public class ContactUsController {
 
-    private Stage primaryStage;
-    private Scene mainScene;
+    private Stage primaryStage;  // Main application stage
+    private Scene mainScene;  // Reference to the main scene for navigation
 
+
+    // Constructor to initialize the controller with stage and main scene
     public ContactUsController(Stage primaryStage, Scene mainScene) {
         this.primaryStage = primaryStage;
         this.mainScene = mainScene;
     }
 
+
+    // Method to display the "Contact Us" scene
     public void showContactUsScene() {
+
         // Outer Background (C8F0FF)
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #C8F0FF;");
+
 
         // Centered VBox with smaller white background
         VBox contentBox = new VBox(10);
@@ -33,15 +42,15 @@ public class ContactUsController {
         contentBox.setAlignment(Pos.CENTER);
         contentBox.setStyle("-fx-background-color: white; -fx-background-radius: 20;");
         contentBox.setSpacing(20);
-
-        // Ensure contentBox size remains fixed
         contentBox.setMaxWidth(500);
         contentBox.setMaxHeight(350);
+
 
         // Create Labels for Titles with Outline Effect
         StackPane title = createOutlinedTitle("Contact Us");
 
-        // Content Labels
+
+        // Content Labels for contact information
         Label contactInfo = createContentLabel(
                 "We're here to help! You can reach us via the following methods:\n" +
                         "\nEmail: support@zvote.com" +
@@ -52,39 +61,50 @@ public class ContactUsController {
         );
         contactInfo.setPadding(new Insets(0, 0, 20, 0));
 
-        // Back Button
+
+        // Back Button for navigation
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-font-family: Onyx; -fx-font-size: 20; -fx-background-color: #C8F0FF; -fx-text-fill: black;" +
                 " -fx-font-weight: bold; -fx-background-radius: 20; -fx-cursor: hand");
         backButton.setPrefHeight(30);
         backButton.setPrefWidth(100);
+
+        // Add hover effects to Back Button
         backButton.setOnMouseEntered(e -> backButton.setStyle(backButton.getStyle().replace("-fx-text-fill: black;", "-fx-text-fill: white;")));
         backButton.setOnMouseExited(e -> backButton.setStyle(backButton.getStyle().replace("-fx-text-fill: white;", "-fx-text-fill: black;")));
+
+        // Add Back Button Action to Navigate to Main Scene
         backButton.setOnAction(e -> goBack());
 
-        // Add components to content box
+
+        // Add components to the content box
         contentBox.getChildren().addAll(title, contactInfo, backButton);
+
 
         // Center the content box in the BorderPane
         StackPane centerWrapper = new StackPane(contentBox);
         root.setCenter(centerWrapper);
 
+
         // Set Scene with Resizable Background
-        Scene contactScene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight()-80);
+        Scene contactScene = new Scene(root, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(contactScene);
         primaryStage.setResizable(false);
     }
 
+
+    // Method to return to the main scene
     private void goBack() {
         primaryStage.setScene(mainScene);
     }
 
-    // Helper method to create bold, outlined title labels
+
+    // Helper Method to Create Bold, Outlined Title Labels
     private StackPane createOutlinedTitle(String text) {
         Label label = new Label(text);
         label.setFont(Font.font("Onyx", FontWeight.BOLD, 40));
 
-        // Create an outline effect by stacking two labels
+        // Create an Outline Effect by Stacking Two Labels
         Label outline = new Label(text);
         outline.setFont(Font.font("Onyx", FontWeight.BOLD, 40));
         outline.setTextFill(Color.BLACK);
@@ -93,18 +113,18 @@ public class ContactUsController {
 
         label.setTextFill(Color.web("#C8F0FF"));
 
-        StackPane stackedLabel = new StackPane(outline, label);
-        return stackedLabel;
+        return new StackPane(outline, label);
     }
 
-    // Helper method for content labels
+
+    // Helper Method for Content Labels
     private Label createContentLabel(String text) {
         Label label = new Label(text);
         label.setWrapText(true);
         label.setFont(Font.font("Arial", 16));
         label.setTextFill(Color.BLACK);
-        label.setMaxWidth(500); // Adjust width to ensure content fits
-        label.setPrefHeight(Region.USE_COMPUTED_SIZE); // Allow height to adjust dynamically
+        label.setMaxWidth(500);  // Adjust Width to Ensure Content Fits
+        label.setPrefHeight(Region.USE_COMPUTED_SIZE);  // Allow Height to Adjust Dynamically
         return label;
     }
 }
