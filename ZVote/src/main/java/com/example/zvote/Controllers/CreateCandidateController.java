@@ -1,8 +1,11 @@
-package com.example.zvote.Controllers;
+package com.example.zvote.Controllers;  // Package declaration, specifies the namespace
 
+
+// Importing necessary classes for UI, file handling, and database functionality
 import com.example.zvote.Models.CandidateModel;
 import com.example.zvote.Models.UserModel;
 import com.example.zvote.Services.CandidateService;
+
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,37 +19,41 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 
+
 public class CreateCandidateController {
+
+    // Method to display the "Create Candidate" form
     public void showCreateCandidateForm(Stage primaryStage, UserModel user) throws Exception {
+
         // Main layout
         BorderPane layout = new BorderPane();
         layout.setStyle("-fx-background-color: transparent;");
 
-        // Top Bar
+
+        // Top bar configuration
         HBox topBar = new HBox(20);
         topBar.setPadding(new Insets(10, 10, 10, 40));
         topBar.setStyle("-fx-background-color: #C8F0FF;");
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-        // Create a shadow effect
+        // Add shadow effect
         DropShadow shadow = new DropShadow();
         shadow.setRadius(5);
         shadow.setOffsetY(2);
         shadow.setColor(Color.LIGHTGRAY);
-
-        // Apply shadow to topBar
         topBar.setEffect(shadow);
 
-        // Logo on the left
+        // Logo
         Label logo = new Label("ZVote");
         logo.setFont(Font.font("Onyx", FontWeight.BOLD, 60));
 
-        // Back Button on the right
+        // Back button
         Button backButton = new Button("Back");
         backButton.setStyle("-fx-background-color: #C8F0FF; -fx-font-weight: bold; -fx-border-radius: 10px; -fx-font-size: 22px;" +
                 "-fx-cursor: hand");
@@ -61,12 +68,12 @@ public class CreateCandidateController {
 
         // Align logo to the left and back button to the right
         Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS); // Make the spacer take up all available space between the logo and back button
-
+        HBox.setHgrow(spacer, Priority.ALWAYS);
         topBar.getChildren().addAll(logo, spacer, backButton);
         layout.setTop(topBar);
 
-        // Create Form
+
+        // Create the candidate form
         GridPane createCandidateForm = new GridPane();
         createCandidateForm.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #C8F0FF; -fx-border-width: 3px;");
         createCandidateForm.setPadding(new Insets(20));
@@ -74,6 +81,7 @@ public class CreateCandidateController {
         createCandidateForm.setHgap(20);
         createCandidateForm.setVgap(20);
 
+        // Form title
         Label title = new Label("Create Candidate");
         title.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
         title.setPadding(new Insets(0, 0, 0, 10));
@@ -81,7 +89,8 @@ public class CreateCandidateController {
         GridPane.setColumnSpan(title, 2);
         GridPane.setHalignment(title, HPos.CENTER);
 
-        // Candidate Fields
+
+        // Candidate name field
         Label nameLabel = new Label("Name:");
         nameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         TextField nameField = new TextField();
@@ -90,6 +99,8 @@ public class CreateCandidateController {
         createCandidateForm.add(nameLabel, 0, 1);
         createCandidateForm.add(nameField, 1, 1);
 
+
+        // Candidate bio field
         Label bioLabel = new Label("Bio:");
         bioLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         TextField bioField = new TextField();
@@ -98,16 +109,18 @@ public class CreateCandidateController {
         createCandidateForm.add(bioLabel, 0, 2);
         createCandidateForm.add(bioField, 1, 2);
 
-        // FileChooser for Photo
+
+        // File chooser for candidate photo
         FileChooser fileChooser = new FileChooser();
         Button uploadPhotoButton = new Button("Upload Candidate Photo");
-        uploadPhotoButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 30px;" +
-                " -fx-background-radius: 30px; -fx-padding: 5px 10px; -fx-cursor: hand");
-        final File[] selectedPhoto = {null}; // To store the chosen photo
+        uploadPhotoButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
+                " -fx-border-radius: 30px; -fx-background-radius: 30px; -fx-padding: 5px 10px; -fx-cursor: hand");
+        final File[] selectedPhoto = {null};  // To store the chosen photo
+
         uploadPhotoButton.setOnAction(event -> {
             File file = fileChooser.showOpenDialog(primaryStage);
             if (file != null) {
-                selectedPhoto[0] = file; // Save the selected file
+                selectedPhoto[0] = file;
                 uploadPhotoButton.setText("Photo Uploaded");
             } else {
                 uploadPhotoButton.setText("Upload Candidate Photo");
@@ -115,55 +128,49 @@ public class CreateCandidateController {
         });
         createCandidateForm.add(uploadPhotoButton, 0, 3);
 
+
+        // Submit button
         Button submitButton = new Button("Create Candidate");
-        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold; -fx-border-radius: 10px;" +
-                " -fx-font-size: 15px; -fx-cursor: hand");
+        submitButton.setStyle("-fx-background-color: #C8F0FF; -fx-text-fill: black; -fx-font-weight: bold;" +
+                " -fx-border-radius: 10px; -fx-font-size: 15px; -fx-cursor: hand");
         submitButton.setPrefWidth(160);
         submitButton.setPrefHeight(38);
         createCandidateForm.add(submitButton, 0, 4);
         GridPane.setColumnSpan(submitButton, 2);
         GridPane.setHalignment(submitButton, HPos.CENTER);
 
+        // Submit button functionality
         submitButton.setOnAction(event -> {
             try {
-                // Check if a photo was selected, otherwise use an empty byte array
                 byte[] photoID = (selectedPhoto[0] != null) ? Files.readAllBytes(selectedPhoto[0].toPath()) : new byte[0];
-
-                // Create the candidate object
                 CandidateModel candidate = new CandidateModel(nameField.getText(), photoID, bioField.getText());
 
-                // Check if the name is already taken
                 CandidateService candidateService = new CandidateService();
                 if (candidateService.isNameTaken(candidate.getName())) {
-                    // Show an error alert if the name is already taken
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR, "A candidate with this name already exists.\n" +
-                            "Modify the name a bit.");
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR, "A candidate with this name already exists.\nModify the name a bit.");
                     errorAlert.showAndWait();
-                    return; // Stop further execution
+                    return;
                 }
 
-                // Add the candidate if the name is unique
                 candidateService.addCandidate(candidate);
-
-                // Show a success alert
                 Alert successAlert = new Alert(Alert.AlertType.INFORMATION, "Candidate created successfully!");
                 successAlert.showAndWait();
                 new CandidatesController().showCandidatesPage(primaryStage, UserController.userSession);
+
             } catch (IOException e) {
-                // Handle photo file reading issues
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while reading the photo file: " + e.getMessage());
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error reading photo file: " + e.getMessage());
                 errorAlert.showAndWait();
             } catch (SQLException e) {
-                // Handle database issues
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An error occurred while adding the candidate to the database: " + e.getMessage());
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Error adding candidate to the database: " + e.getMessage());
                 errorAlert.showAndWait();
             } catch (Exception e) {
-                // Handle unexpected errors
-                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "An unexpected error occurred: " + e.getMessage());
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR, "Unexpected error: " + e.getMessage());
                 errorAlert.showAndWait();
             }
         });
 
+
+        // Set up the scene and display the form
         layout.setCenter(createCandidateForm);
         Scene scene = new Scene(layout, Screen.getPrimary().getBounds().getWidth(), Screen.getPrimary().getBounds().getHeight() - 80);
         primaryStage.setScene(scene);
