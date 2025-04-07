@@ -45,7 +45,7 @@ public class AdminLandingPageController {
     public void showAdminLandingPage(Stage primaryStage, Map<String, Object> userSession) throws Exception {
         this.primaryStage = primaryStage;
         this.userSession = userSession;
-
+        this.userSession.put("user", userSession.get("user"));
 
         // Main layout
         BorderPane layout = new BorderPane();
@@ -91,7 +91,7 @@ public class AdminLandingPageController {
         MenuItem candidatesItem = new MenuItem("Candidates");
         candidatesItem.setOnAction(e -> {
             try {
-                new CandidatesController().showCandidatesPage(primaryStage, userSession);
+                new CandidatesController().showCandidatesPage(primaryStage, this.userSession);
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
@@ -100,7 +100,7 @@ public class AdminLandingPageController {
         MenuItem userInfoItem = new MenuItem("User Info");
         userInfoItem.setOnAction(e -> {
             UserController userController = new UserController();
-            userController.showUserProfile(primaryStage, (UserModel) userSession.get("user"));
+            userController.showUserProfile(primaryStage, (UserModel) this.userSession.get("user"));
         });
 
         MenuItem logoutItem = new MenuItem("Log Out");
@@ -187,7 +187,7 @@ public class AdminLandingPageController {
                 "-fx-border-width: 3px; -fx-border-style: dashed; -fx-cursor: hand;");
         addPollButton.setOnAction(e -> {
             try {
-                new AdminPollController().showCreatePoll(primaryStage, (UserModel) userSession.get("user"));
+                new AdminPollController().showCreatePoll(primaryStage, (UserModel) this.userSession.get("user"));
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
             }
