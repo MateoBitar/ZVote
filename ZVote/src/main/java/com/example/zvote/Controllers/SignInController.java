@@ -123,6 +123,15 @@ public class SignInController {
         countryCodeDropdown.setStyle("-fx-background-color: white; -fx-border-radius: 50;" +
                 "-fx-border-color: #C8F0FF; -fx-border-width: 3px;");
 
+        countryCodeDropdown.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                // Extracting just the numerical part of the country code
+                String numericCode = newValue.split(" ")[0]; // Splits by space and takes the first part (e.g., "+961")
+                // Use the numericCode variable as needed
+                System.out.println("Selected country code: " + numericCode);
+            }
+        });
+
         TextField phoneField = new TextField();
         phoneField.setPromptText("Phone Number");
         phoneField.textProperty().addListener((observable, oldValue, newValue) -> {

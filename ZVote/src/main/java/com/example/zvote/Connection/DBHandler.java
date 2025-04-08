@@ -5,7 +5,7 @@ import java.sql.*;  // Import necessary SQL classes
 
 
 public class DBHandler {
-    private static final String URL = "jdbc:mysql://10.40.4.6:3307/zvote";  // Database URL
+    private static final String URL = "jdbc:mysql://10.40.11.142:3307/zvote";  // Database URL
     private static final String USER = "marcoUNI";  // Database username
     private static final String PASSWORD = "Marco.Bitar21";  // Database password
 
