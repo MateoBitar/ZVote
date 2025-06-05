@@ -1,13 +1,17 @@
 package com.example.zvote.Connection;  // Package declaration, specifies the namespace
 
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.*;  // Import necessary SQL classes
 
 
 public class DBHandler {
-    private static final String URL = "jdbc:mysql://192.168.1.10:3307/zvote";  // Database URL
-    private static final String USER = "marco";  // Database username
-    private static final String PASSWORD = "Marco.Bitar21";  // Database password
+    private static final Dotenv dotenv = Dotenv.load();
+
+    private static final String URL = dotenv.get("DB_URL");
+    private static final String USER = dotenv.get("DB_USER");
+    private static final String PASSWORD = dotenv.get("DB_PASSWORD");  // Database password
 
     private Connection connection;  // Persistent database connection instance
 

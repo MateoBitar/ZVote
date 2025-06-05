@@ -13,6 +13,7 @@ module com.example.zvote {
     requires java.sql;
     requires java.desktop;
     requires mysql.connector.j;
+    requires dotenv.java;
 
     opens com.example.zvote to javafx.fxml;
     exports com.example.zvote;
