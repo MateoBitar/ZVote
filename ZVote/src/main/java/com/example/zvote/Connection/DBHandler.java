@@ -2,7 +2,6 @@ package com.example.zvote.Connection;  // Package declaration, specifies the nam
 
 
 import io.github.cdimascio.dotenv.Dotenv;
-
 import java.sql.*;  // Import necessary SQL classes
 
 
